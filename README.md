@@ -1,12 +1,10 @@
-# Stompat
+# Studio PDF a beneficio della gloriosa causa ritaglio Stampante
 
-**Studio PDF a beneficio della gloriosa causa ritaglio Stampante.**
-
-Carichi un PDF, selezioni con il mouse (o con il dito) la porzione esatta di una pagina,
+**Stompat.** Carichi un PDF, selezioni con il mouse (o con il dito) la porzione esatta di una pagina,
 la raddrizzi se la scansione è storta, e stampi solo quella. Niente backend, niente build,
 niente upload: il file non lascia mai il browser.
 
-👉 **[Apri Stompat](https://gabrielemartire.github.io/Stompat_Studio_PDF_a_beneficio_della_gloriosa_causa_ritaglio_Stampante/)**
+👉 **[Apri l'applicazione](https://gabrielemartire.github.io/Stompat_Studio_PDF_a_beneficio_della_gloriosa_causa_ritaglio_Stampante/)**
 
 ## Cosa fa
 
