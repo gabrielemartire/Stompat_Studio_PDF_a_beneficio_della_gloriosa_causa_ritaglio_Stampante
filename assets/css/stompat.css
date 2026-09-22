@@ -58,14 +58,13 @@ kbd{
 }
 
 /* ---------- testata ---------- */
-.masthead{padding:44px 0 28px}
+.masthead{padding:44px 0 30px}
 h1{
   margin:0;max-width:24ch;
   font-family:var(--display);font-weight:400;
   font-size:clamp(28px,5.2vw,44px);line-height:1.12;letter-spacing:.005em;
 }
 h1 .a{color:var(--accent)}
-.subtitle{margin:14px 0 0;max-width:56ch;color:var(--muted);font-size:14.5px}
 
 /* ---------- pannelli ---------- */
 .panel{
