@@ -1,6 +1,6 @@
-# Studio PDF a beneficio della gloriosa causa ritaglio Stampante
+# Stompat Studio PDF a beneficio della gloriosa causa ritaglio Stampante
 
-**Stompat.** Carichi un PDF, selezioni con il mouse (o con il dito) la porzione esatta di una pagina,
+Carichi un PDF, selezioni con il mouse (o con il dito) la porzione esatta di una pagina,
 la raddrizzi se la scansione è storta, e stampi solo quella. Niente backend, niente build,
 niente upload: il file non lascia mai il browser.
 
