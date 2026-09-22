@@ -37,7 +37,7 @@
       return (px / pxPerPoint) * 25.4 / 72;
     },
 
-    /* nome file al sicuro dal filesystem e dai burocrati */
+    /* nome file utilizzabile su qualsiasi filesystem */
     safeName: function (name) {
       return String(name)
         .replace(/\.pdf$/i, '')

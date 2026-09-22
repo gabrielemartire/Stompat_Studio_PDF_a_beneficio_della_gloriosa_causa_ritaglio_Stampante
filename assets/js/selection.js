@@ -10,7 +10,7 @@
   var clamp = Stompat.util.clamp;
 
   var HANDLE_HIT_PX = 16;  // tolleranza per afferrare un angolo
-  var MIN_SIDE_PX = 8;     // sotto questa soglia non è una selezione, è un incidente
+  var MIN_SIDE_PX = 8;     // sotto questa soglia la selezione viene scartata
 
   Stompat.selection = (function () {
     var bus = Stompat.emitter();
@@ -96,7 +96,7 @@
         sel = { x: p.x, y: p.y, w: 0, h: 0 };
       }
 
-      try { overlay.setPointerCapture(e.pointerId); } catch (err) { /* vecchi browser */ }
+      try { overlay.setPointerCapture(e.pointerId); } catch (err) { /* browser senza pointer capture */ }
       draw();
     }
 

@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Stompat — Studio PDF a beneficio della gloriosa causa ritaglio Stampante</title>
-<meta name="description" content="Stompat: carichi un PDF, selezioni col dito o col mouse la porzione esatta di pagina, la raddrizzi, la stampi. Tutto nel browser, nessun server.">
+<title>Stompat — ritaglia e stampa una porzione di PDF</title>
+<meta name="description" content="Stompat: carichi un PDF, selezioni con il mouse o con il dito la porzione esatta di una pagina, la raddrizzi e la stampi. Tutto nel browser, nessun upload.">
 <meta name="color-scheme" content="light dark">
 
-<meta property="og:title" content="Stompat № 001">
-<meta property="og:description" content="Studio PDF a beneficio della gloriosa causa ritaglio Stampante.">
+<meta property="og:title" content="Stompat">
+<meta property="og:description" content="Ritaglia e stampa una porzione esatta di una pagina PDF, direttamente nel browser.">
 <meta property="og:type" content="website">
 
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
@@ -21,24 +21,17 @@
 <div class="wrap">
 
   <header class="masthead">
-    <p class="eyebrow">Ministero del Ritaglio · Ufficio Carta e Toner</p>
-    <div class="brandline">
-      <h1>Stomp<span class="a">at</span></h1>
-      <span class="protocol">№&nbsp;001</span>
-    </div>
-    <p class="subtitle">Studio PDF a beneficio della gloriosa causa ritaglio Stampante. Molto bene.</p>
-    <div class="rule2" aria-hidden="true"></div>
+    <h1>Stomp<span class="a">at</span></h1>
+    <p class="subtitle">Studio PDF a beneficio della gloriosa causa ritaglio Stampante.</p>
   </header>
 
-  <!-- 01 — DOCUMENTO -->
   <section class="panel">
-    <div class="rule2" aria-hidden="true"></div>
     <div class="panel-body">
-      <h2 class="label"><span class="n">01</span>Documento</h2>
+      <h2 class="label">Documento</h2>
       <div class="row">
         <input type="file" id="fileInput" accept="application/pdf,.pdf" class="sr">
         <label class="btn file" for="fileInput">Carica PDF</label>
-        <span class="filename" id="fileName">Nessun documento depositato.</span>
+        <span class="filename" id="fileName">Nessun file selezionato.</span>
       </div>
       <div class="row row-pager">
         <div class="pager">
@@ -47,38 +40,34 @@
           <button class="btn small" id="nextBtn" disabled aria-label="Pagina successiva">Succ. ›</button>
         </div>
       </div>
-      <p class="status" id="status" role="status">In attesa di documento. Senza documento, il cittadino non esiste.</p>
+      <p class="status" id="status" role="status">Carica un PDF per iniziare.</p>
     </div>
   </section>
 
-  <!-- 02 — RADDRIZZAMENTO -->
   <section class="panel">
-    <div class="rule2" aria-hidden="true"></div>
     <div class="panel-body">
-      <h2 class="label"><span class="n">02</span>Raddrizzamento</h2>
+      <h2 class="label">Raddrizza la pagina</h2>
       <div class="rot">
         <span class="ticks" aria-hidden="true">−10°</span>
         <input type="range" id="rotRange" min="-10" max="10" step="0.1" value="0" disabled
                aria-label="Rotazione fine della pagina, in gradi">
         <span class="ticks" aria-hidden="true">+10°</span>
         <output class="deg" id="degOut" for="rotRange">0.0°</output>
-        <button class="btn small ghost" id="rotReset" disabled>Reset 0°</button>
+        <button class="btn small ghost" id="rotReset" disabled>Azzera</button>
       </div>
-      <p class="hint">Per le scansioni storte. La selezione lavora sull'immagine già raddrizzata: si stampa quello che si vede.</p>
+      <p class="hint">Utile per le scansioni storte. La selezione lavora sull'immagine già raddrizzata: stampi quello che vedi.</p>
     </div>
   </section>
 
   <div class="grid">
 
-    <!-- 03 — SELEZIONE -->
     <section class="panel">
-      <div class="rule2" aria-hidden="true"></div>
       <div class="panel-body">
-        <h2 class="label"><span class="n">03</span>Selezione dell'area</h2>
+        <h2 class="label">Seleziona l'area</h2>
         <div class="stage" id="stage">
           <div class="empty" id="empty">
-            <strong>Zona vuota</strong>
-            Deposita qui un PDF, oppure usa il pulsante qui sopra. Poi trascina il mouse (o il dito) sul riquadro da stampare.
+            <strong>Nessun PDF caricato</strong>
+            Trascina qui un file, oppure usa il pulsante “Carica PDF”.
           </div>
           <div class="canvas-holder" id="holder" hidden>
             <canvas id="viewCanvas"></canvas>
@@ -90,26 +79,24 @@
             </div>
           </div>
         </div>
-        <p class="hint" id="stageHint">Trascina per selezionare · dentro il riquadro per spostarlo · sugli angoli per ridimensionarlo · <kbd>Esc</kbd> per azzerare.</p>
+        <p class="hint" id="stageHint">Trascina per selezionare · trascina dentro il riquadro per spostarlo · dagli angoli per ridimensionarlo · <kbd>Esc</kbd> per annullare.</p>
       </div>
     </section>
 
-    <!-- 04 — ESECUZIONE -->
     <section class="panel">
-      <div class="rule2" aria-hidden="true"></div>
       <div class="panel-body">
-        <h2 class="label"><span class="n">04</span>Esecuzione</h2>
-        <div class="preview" id="preview"><span class="none">Nessun ritaglio<br>registrato.</span></div>
+        <h2 class="label">Ritaglio</h2>
+        <div class="preview" id="preview"><span class="none">Nessuna selezione.</span></div>
         <dl class="meta">
           <div><dt>Pagina</dt><dd id="mPage">—</dd></div>
           <div><dt>Rotazione</dt><dd id="mRot">0.0°</dd></div>
-          <div><dt>Ritaglio</dt><dd id="mSize">—</dd></div>
+          <div><dt>Dimensioni</dt><dd id="mSize">—</dd></div>
           <div><dt>Su carta</dt><dd id="mMm">—</dd></div>
         </dl>
         <div class="actions">
           <button class="btn primary" id="printBtn" disabled>Stampa</button>
           <button class="btn" id="downloadBtn" disabled>Scarica PNG</button>
-          <button class="btn ghost" id="clearBtn" disabled>Azzera selezione</button>
+          <button class="btn ghost" id="clearBtn" disabled>Annulla selezione</button>
         </div>
       </div>
     </section>
@@ -117,22 +104,21 @@
   </div>
 
   <footer>
-    <span>Tutto gira nel browser: nessun file lascia questa macchina, nemmeno il segretario lo vede.</span>
-    <span>Stompat № 001 · <a href="https://github.com/gabrielemartire/Stompat_Studio_PDF_a_beneficio_della_gloriosa_causa_ritaglio_Stampante" rel="noopener">codice sorgente</a></span>
+    <span>Tutto gira nel browser: nessun file viene caricato online.</span>
+    <span><a href="https://github.com/gabrielemartire/Stompat_Studio_PDF_a_beneficio_della_gloriosa_causa_ritaglio_Stampante" rel="noopener">Codice sorgente</a></span>
   </footer>
 </div>
 
-<!-- fallback di stampa: popup bloccato e stampa da iframe non disponibile -->
+<!-- mostrata solo se il browser blocca sia il popup sia la stampa da iframe -->
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
   <div class="card">
-    <div class="rule2" aria-hidden="true"></div>
     <div class="card-body">
-      <h2 class="label" id="modalTitle"><span class="n">!</span>Stampa bloccata dal comitato</h2>
-      <p>Il browser ha impedito l'apertura della finestra di stampa. Due vie d'uscita, entrambe legali:</p>
+      <h2 class="label" id="modalTitle">Stampa bloccata dal browser</h2>
+      <p>Non è stato possibile aprire la finestra di stampa. Puoi:</p>
       <img id="modalImg" alt="Anteprima del ritaglio da stampare">
       <ol>
-        <li>autorizza i popup per questa pagina e ripremi <strong>Stampa</strong>;</li>
-        <li>oppure scarica l'immagine e stampala a mano, come ai vecchi tempi.</li>
+        <li>consentire i popup per questa pagina e premere di nuovo <strong>Stampa</strong>;</li>
+        <li>oppure scaricare l'immagine e stamparla da lì.</li>
       </ol>
       <div class="row">
         <a class="btn primary" id="modalDownload" download="stompat-ritaglio.png" href="#">Scarica PNG</a>

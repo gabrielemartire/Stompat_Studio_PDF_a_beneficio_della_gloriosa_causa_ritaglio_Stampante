@@ -1,6 +1,6 @@
 /* Stompat — output
  * Ritaglio del canvas visibile, stampa e salvataggio su disco.
- * La stampa ha tre vie, in ordine di dignità:
+ * La stampa ha tre strade, in ordine di preferenza:
  *   1. finestra separata (evita i blocchi di window.print() dentro un iframe)
  *   2. iframe nascosto, se il popup è stato bloccato
  *   3. modale con l'immagine e il download, se anche l'iframe non collabora
@@ -71,7 +71,7 @@
       // 2 — iframe nascosto
       printViaIframe(html, function (ok) {
         if (ok) report('iframe');
-        else blocked(dataUrl);   // 3 — resa onorevole: modale + download
+        else blocked(dataUrl);   // 3 — modale con anteprima e download
       });
     }
 

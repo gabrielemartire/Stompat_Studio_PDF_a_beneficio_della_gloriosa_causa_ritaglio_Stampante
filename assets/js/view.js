@@ -33,11 +33,11 @@
 
     function openFile(file) {
       if (!global.pdfjsLib) {
-        bus.emit('error', { message: 'PDF.js non è disponibile: serve la rete alla prima apertura.' });
+        bus.emit('error', { message: 'PDF.js non è stato caricato: serve una connessione alla prima apertura.' });
         return;
       }
       if (file.type && file.type.indexOf('pdf') === -1 && !/\.pdf$/i.test(file.name)) {
-        bus.emit('error', { message: 'Il comitato accetta solo PDF. Questo file è un impostore.' });
+        bus.emit('error', { message: 'Il file selezionato non è un PDF.' });
         return;
       }
 
@@ -46,12 +46,12 @@
 
       var reader = new FileReader();
       reader.onerror = function () {
-        bus.emit('error', { message: 'Lettura fallita: il file oppone resistenza.' });
+        bus.emit('error', { message: 'Impossibile leggere il file.' });
       };
       reader.onload = function () {
         global.pdfjsLib.getDocument({ data: new Uint8Array(reader.result) }).promise
           .then(function (loaded) {
-            if (doc) { try { doc.destroy(); } catch (e) { /* pazienza */ } }
+            if (doc) { try { doc.destroy(); } catch (e) { /* nulla da fare */ } }
             doc = loaded;
             pageNumber = 1;
             angle = 0;
@@ -61,7 +61,7 @@
           .catch(function (err) {
             console.error('[stompat]', err);
             bus.emit('error', {
-              message: 'Documento respinto dal comitato: ' +
+              message: 'Impossibile aprire il PDF: ' +
                 ((err && err.message) || 'formato non leggibile')
             });
           });
@@ -74,7 +74,7 @@
     function render() {
       if (!doc || !target) return;
       var mine = ++token;
-      if (task) { try { task.cancel(); } catch (e) { /* già morto */ } }
+      if (task) { try { task.cancel(); } catch (e) { /* già annullato */ } }
 
       bus.emit('page', { pageNumber: pageNumber, numPages: doc.numPages });
 

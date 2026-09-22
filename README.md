@@ -1,4 +1,4 @@
-# Stompat № 001
+# Stompat
 
 **Studio PDF a beneficio della gloriosa causa ritaglio Stampante.**
 
@@ -53,7 +53,7 @@ Il canvas sorgente è la pagina renderizzata da PDF.js e non viene mai ruotato.
 La rotazione viene applicata ridisegnandolo su un secondo canvas, dimensionato per
 contenere gli angoli senza tagliarli (`w·|cos| + h·|sin|` per il lato, e simmetrico per l'altro).
 Selezione, anteprima, stampa e download leggono tutti da **quel** canvas.
-Cambiare l'angolo invalida la selezione corrente, perché le coordinate non sarebbero più valide.
+Cambiare l'angolo annulla la selezione corrente, perché le coordinate non sarebbero più valide.
 
 ### Come funziona la stampa
 
@@ -62,13 +62,13 @@ Tre vie, in ordine:
 1. finestra separata con dentro solo l'immagine ritagliata — evita i blocchi di
    `window.print()` quando la pagina gira dentro un iframe;
 2. se il popup viene bloccato: iframe nascosto con lo stesso documento;
-3. se anche quello fallisce: modale con l'anteprima, le istruzioni per sbloccare i popup
-   e il download diretto del PNG.
+3. se anche quello fallisce: finestra di dialogo con l'anteprima, le istruzioni per
+   consentire i popup e il download diretto del PNG.
 
 ## Test
 
 La geometria della selezione (disegno, spostamento, ridimensionamento dagli angoli, clamp
-ai bordi, scarto delle aree microscopiche) ha un test senza dipendenze:
+ai bordi, scarto delle aree troppo piccole) ha un test senza dipendenze:
 
 ```sh
 node test/selection.test.js
@@ -76,10 +76,10 @@ node test/selection.test.js
 
 ## Stile
 
-Interfaccia neutra al 95%. Il resto è citazione: [Russo One](https://fonts.google.com/specimen/Russo+One)
-solo per il titolo e le etichette di sezione, un unico accento rosso mattone (`#9E2A2B`),
-un filetto doppio da intestazione burocratica sui pannelli e un numero di protocollo finto
-accanto al titolo. Tema chiaro e scuro automatici.
+Interfaccia neutra: grigi tenui, angoli morbidi, un solo colore d'accento (`#9E2A2B`)
+per il pulsante principale e il riquadro di selezione.
+[Russo One](https://fonts.google.com/specimen/Russo+One) è usato solo per il titolo.
+Tema chiaro e scuro automatici.
 
 ## Dipendenze
 

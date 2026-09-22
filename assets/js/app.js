@@ -1,5 +1,5 @@
 /* Stompat — app
- * Collega DOM, view, selection e output. Qui vive anche il tono di voce del Ministero.
+ * Collega DOM, view, selection e output, e tiene aggiornato lo stato a schermo.
  */
 (function (global) {
   'use strict';
@@ -43,7 +43,7 @@
 
   function configurePdfJs() {
     if (!global.pdfjsLib) {
-      setStatus('PDF.js non è stato caricato. Serve la rete alla prima apertura della pagina.', 'err');
+      setStatus('PDF.js non è stato caricato: serve una connessione alla prima apertura della pagina.', 'err');
       return;
     }
     global.pdfjsLib.GlobalWorkerOptions.workerSrc =
@@ -100,7 +100,7 @@
 
   function resetPreview() {
     lastCrop = null;
-    el.preview.innerHTML = '<span class="none">Nessun ritaglio<br>registrato.</span>';
+    el.preview.innerHTML = '<span class="none">Nessuna selezione.</span>';
     setActionsEnabled(false);
     updateMeta();
   }
@@ -133,7 +133,7 @@
 
     view.on('loading', function (info) {
       el.fileName.textContent = info.name;
-      setStatus('Lettura del documento in corso…');
+      setStatus('Caricamento del PDF…');
     });
 
     view.on('loaded', function (info) {
@@ -143,8 +143,8 @@
       el.degOut.textContent = '0.0°';
       selection.clear();
       resetPreview();
-      setStatus('Documento accettato: ' + info.numPages +
-        (info.numPages === 1 ? ' pagina.' : ' pagine.') + ' Successo grandissimo.', 'ok');
+      setStatus('PDF caricato: ' + info.numPages +
+        (info.numPages === 1 ? ' pagina.' : ' pagine.'), 'ok');
     });
 
     view.on('rendered', function () {
@@ -176,7 +176,7 @@
   function afterPageChange() {
     selection.clear();
     resetPreview();
-    setStatus('Pagina ' + view.getPageNumber() + '. Il protocollo prosegue.');
+    setStatus('Pagina ' + view.getPageNumber() + ' di ' + view.getNumPages() + '.');
   }
 
   /* ---------------- rotazione ---------------- */
@@ -193,7 +193,7 @@
       var changed = view.setAngle(0);
       el.degOut.textContent = '0.0°';
       if (changed) invalidateForRotation();
-      setStatus('Rotazione riportata a 0°. La pagina torna dritta come un verbale.');
+      setStatus('Rotazione azzerata.');
     });
   }
 
@@ -202,7 +202,7 @@
     if (!selection.isEmpty()) {
       selection.clear();
       resetPreview();
-      setStatus('Rotazione cambiata: selezione annullata, il comitato pretende coordinate fresche.');
+      setStatus('Rotazione cambiata: la selezione è stata annullata.');
     } else {
       updateMeta();
     }
@@ -216,13 +216,13 @@
     selection.on('commit', function (s) {
       buildPreview(s);
       var mm = millimetres(s.px);
-      setStatus('Area registrata: ' + s.px.w + ' × ' + s.px.h + ' px' +
-        (mm ? ' (≈ ' + mm.w + ' × ' + mm.h + ' mm su carta)' : '') + '. Successo grandissimo.', 'ok');
+      setStatus('Selezione: ' + s.px.w + ' × ' + s.px.h + ' px' +
+        (mm ? ' (≈ ' + mm.w + ' × ' + mm.h + ' mm su carta)' : '') + '.', 'ok');
     });
 
     selection.on('toosmall', function () {
       resetPreview();
-      setStatus('Area troppo piccola per il protocollo. Riprovare con più convinzione.');
+      setStatus("Selezione troppo piccola: riprova trascinando un'area più grande.");
     });
 
     selection.on('clear', updateMeta);
@@ -271,7 +271,7 @@
         title: view.getDocName() + ' — ritaglio p.' + view.getPageNumber(),
         onRoute: function (route) {
           setStatus(route === 'window'
-            ? 'Finestra di stampa aperta. Timbrare e firmare.'
+            ? 'Finestra di stampa aperta.'
             : 'Popup bloccato: stampa avviata direttamente da questa pagina.', 'ok');
         },
         onBlocked: function (dataUrl) {
@@ -285,13 +285,13 @@
       if (!canvas) return;
       var name = cropFileName();
       output.download(canvas, name);
-      setStatus('Ritaglio archiviato su disco: ' + name, 'ok');
+      setStatus('Immagine salvata: ' + name, 'ok');
     });
 
     el.clearBtn.addEventListener('click', function () {
       selection.clear();
       resetPreview();
-      setStatus('Selezione azzerata. Il protocollo riparte da capo.');
+      setStatus('Selezione annullata.');
     });
   }
 
@@ -303,7 +303,7 @@
     el.modalDownload.download = cropFileName();
     el.modal.hidden = false;
     el.modalClose.focus();
-    setStatus('Stampa automatica bloccata dal browser: vedi le istruzioni a schermo.', 'err');
+    setStatus('Stampa bloccata dal browser: vedi le istruzioni a schermo.', 'err');
   }
 
   function closeModal() {
@@ -328,7 +328,7 @@
         if (!selection.isEmpty()) {
           selection.clear();
           resetPreview();
-          setStatus('Selezione azzerata.');
+          setStatus('Selezione annullata.');
         }
         return;
       }
