@@ -45,16 +45,19 @@
 
   <section class="panel">
     <div class="panel-body">
-      <h2 class="label">Raddrizza la pagina</h2>
+      <h2 class="label">Ruota la pagina</h2>
+      <div class="row rot-quick">
+        <button class="btn small" id="rotLeft" disabled>↺ 90° a sinistra</button>
+        <button class="btn small" id="rotRight" disabled>↻ 90° a destra</button>
+        <button class="btn small ghost" id="rotReset" disabled>Azzera</button>
+      </div>
       <div class="rot">
         <span class="ticks" aria-hidden="true">−10°</span>
         <input type="range" id="rotRange" min="-10" max="10" step="0.1" value="0" disabled
-               aria-label="Rotazione fine della pagina, in gradi">
+               aria-label="Inclinazione fine della pagina, in gradi">
         <span class="ticks" aria-hidden="true">+10°</span>
         <output class="deg" id="degOut" for="rotRange">0.0°</output>
-        <button class="btn small ghost" id="rotReset" disabled>Azzera</button>
       </div>
-      <p class="hint">Utile per le scansioni storte. La selezione lavora sull'immagine già raddrizzata: stampi quello che vedi.</p>
     </div>
   </section>
 

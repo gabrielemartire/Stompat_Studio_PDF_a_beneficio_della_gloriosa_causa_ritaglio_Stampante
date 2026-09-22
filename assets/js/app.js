@@ -34,7 +34,8 @@
 
   function cacheDom() {
     ['fileInput', 'fileName', 'status', 'prevBtn', 'nextBtn', 'pageCount',
-      'rotRange', 'degOut', 'rotReset', 'stage', 'holder', 'empty', 'viewCanvas',
+      'rotRange', 'degOut', 'rotReset', 'rotLeft', 'rotRight',
+      'stage', 'holder', 'empty', 'viewCanvas',
       'overlay', 'selRect', 'preview', 'mPage', 'mRot', 'mSize', 'mMm',
       'printBtn', 'downloadBtn', 'clearBtn',
       'modal', 'modalImg', 'modalDownload', 'modalClose'
@@ -140,6 +141,8 @@
       el.rotRange.value = '0';
       el.rotRange.disabled = false;
       el.rotReset.disabled = false;
+      el.rotLeft.disabled = false;
+      el.rotRight.disabled = false;
       el.degOut.textContent = '0.0°';
       selection.clear();
       resetPreview();
@@ -183,18 +186,27 @@
 
   function wireRotation() {
     el.rotRange.addEventListener('input', function () {
-      var changed = view.setAngle(el.rotRange.value);
-      el.degOut.textContent = view.getAngle().toFixed(1) + '°';
+      var changed = view.setFine(el.rotRange.value);
+      el.degOut.textContent = view.getFine().toFixed(1) + '°';
       if (changed) invalidateForRotation();
     });
 
+    el.rotLeft.addEventListener('click', function () { turn(-1); });
+    el.rotRight.addEventListener('click', function () { turn(1); });
+
     el.rotReset.addEventListener('click', function () {
       el.rotRange.value = '0';
-      var changed = view.setAngle(0);
+      var changed = view.resetRotation();
       el.degOut.textContent = '0.0°';
       if (changed) invalidateForRotation();
       setStatus('Rotazione azzerata.');
     });
+  }
+
+  function turn(dir) {
+    view.rotate90(dir);
+    invalidateForRotation();
+    setStatus('Pagina ruotata: ' + view.getAngle().toFixed(1) + '°.');
   }
 
   /* Dopo una rotazione le vecchie coordinate non valgono più: si ricomincia. */

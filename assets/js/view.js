@@ -20,7 +20,8 @@
     var doc = null;
     var docName = 'documento';
     var pageNumber = 1;
-    var angle = 0;          // gradi, -10..+10
+    var quarter = 0;        // quarti di giro: 0, 1, 2, 3 (0°, 90°, 180°, 270°)
+    var fine = 0;           // inclinazione fine, -10..+10 gradi
     var pxPerPoint = 0;     // scala effettiva usata nel render
     var task = null;
     var token = 0;
@@ -54,7 +55,8 @@
             if (doc) { try { doc.destroy(); } catch (e) { /* nulla da fare */ } }
             doc = loaded;
             pageNumber = 1;
-            angle = 0;
+            quarter = 0;
+            fine = 0;
             bus.emit('loaded', { name: file.name, numPages: doc.numPages });
             render();
           })
@@ -119,7 +121,7 @@
     function compose() {
       if (!target || !source.width) return;
 
-      var rad = angle * Math.PI / 180;
+      var rad = totalAngle() * Math.PI / 180;
       var cos = Math.abs(Math.cos(rad));
       var sin = Math.abs(Math.sin(rad));
       var w = source.width;
@@ -129,8 +131,7 @@
       target.height = Math.round(w * sin + h * cos);
 
       var ctx = target.getContext('2d');
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, target.width, target.height);
+      ctx.clearRect(0, 0, target.width, target.height);
       ctx.save();
       ctx.translate(target.width / 2, target.height / 2);
       ctx.rotate(rad);
@@ -139,7 +140,7 @@
       ctx.drawImage(source, -w / 2, -h / 2);
       ctx.restore();
 
-      bus.emit('composed', { angle: angle, width: target.width, height: target.height });
+      bus.emit('composed', { angle: totalAngle(), width: target.width, height: target.height });
     }
 
     /* ---------- navigazione e rotazione ---------- */
@@ -153,10 +154,34 @@
       return true;
     }
 
-    function setAngle(deg) {
+    /* angolo totale mostrato a schermo, normalizzato in -180..180 */
+    function totalAngle() {
+      var deg = (quarter * 90 + fine) % 360;
+      if (deg > 180) deg -= 360;
+      if (deg <= -180) deg += 360;
+      return deg;
+    }
+
+    /* inclinazione fine (lo slider) */
+    function setFine(deg) {
       var next = Stompat.util.clamp(parseFloat(deg) || 0, -10, 10);
-      if (next === angle) return false;
-      angle = next;
+      if (next === fine) return false;
+      fine = next;
+      compose();
+      return true;
+    }
+
+    /* quarti di giro: dir = -1 (antiorario) oppure +1 (orario) */
+    function rotate90(dir) {
+      quarter = (quarter + (dir < 0 ? 3 : 1)) % 4;
+      compose();
+      return true;
+    }
+
+    function resetRotation() {
+      if (!quarter && !fine) return false;
+      quarter = 0;
+      fine = 0;
       compose();
       return true;
     }
@@ -170,8 +195,11 @@
       goTo: goTo,
       next: function () { return goTo(pageNumber + 1); },
       prev: function () { return goTo(pageNumber - 1); },
-      setAngle: setAngle,
-      getAngle: function () { return angle; },
+      setFine: setFine,
+      rotate90: rotate90,
+      resetRotation: resetRotation,
+      getFine: function () { return fine; },
+      getAngle: totalAngle,
       getPageNumber: function () { return pageNumber; },
       getNumPages: function () { return doc ? doc.numPages : 0; },
       getPxPerPoint: function () { return pxPerPoint; },
