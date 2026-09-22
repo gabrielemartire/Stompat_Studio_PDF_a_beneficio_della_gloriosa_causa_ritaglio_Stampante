@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Stompat">
+  <rect width="32" height="32" fill="#1b1c20"/>
+  <rect x="7" y="4" width="18" height="24" fill="#f4f3f0"/>
+  <rect x="7" y="13" width="18" height="7" fill="#9E2A2B"/>
+  <rect x="10" y="7" width="12" height="18" fill="none" stroke="#1b1c20" stroke-width="1.5" stroke-dasharray="3 2"/>
+</svg>

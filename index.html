@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stompat — Studio PDF a beneficio della gloriosa causa ritaglio Stampante</title>
+<meta name="description" content="Stompat: carichi un PDF, selezioni col dito o col mouse la porzione esatta di pagina, la raddrizzi, la stampi. Tutto nel browser, nessun server.">
+<meta name="color-scheme" content="light dark">
+
+<meta property="og:title" content="Stompat № 001">
+<meta property="og:description" content="Studio PDF a beneficio della gloriosa causa ritaglio Stampante.">
+<meta property="og:type" content="website">
+
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/stompat.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Ministero del Ritaglio · Ufficio Carta e Toner</p>
+    <div class="brandline">
+      <h1>Stomp<span class="a">at</span></h1>
+      <span class="protocol">№&nbsp;001</span>
+    </div>
+    <p class="subtitle">Studio PDF a beneficio della gloriosa causa ritaglio Stampante. Molto bene.</p>
+    <div class="rule2" aria-hidden="true"></div>
+  </header>
+
+  <!-- 01 — DOCUMENTO -->
+  <section class="panel">
+    <div class="rule2" aria-hidden="true"></div>
+    <div class="panel-body">
+      <h2 class="label"><span class="n">01</span>Documento</h2>
+      <div class="row">
+        <input type="file" id="fileInput" accept="application/pdf,.pdf" class="sr">
+        <label class="btn file" for="fileInput">Carica PDF</label>
+        <span class="filename" id="fileName">Nessun documento depositato.</span>
+      </div>
+      <div class="row row-pager">
+        <div class="pager">
+          <button class="btn small" id="prevBtn" disabled aria-label="Pagina precedente">‹ Prec.</button>
+          <span class="count" id="pageCount" aria-live="polite">— / —</span>
+          <button class="btn small" id="nextBtn" disabled aria-label="Pagina successiva">Succ. ›</button>
+        </div>
+      </div>
+      <p class="status" id="status" role="status">In attesa di documento. Senza documento, il cittadino non esiste.</p>
+    </div>
+  </section>
+
+  <!-- 02 — RADDRIZZAMENTO -->
+  <section class="panel">
+    <div class="rule2" aria-hidden="true"></div>
+    <div class="panel-body">
+      <h2 class="label"><span class="n">02</span>Raddrizzamento</h2>
+      <div class="rot">
+        <span class="ticks" aria-hidden="true">−10°</span>
+        <input type="range" id="rotRange" min="-10" max="10" step="0.1" value="0" disabled
+               aria-label="Rotazione fine della pagina, in gradi">
+        <span class="ticks" aria-hidden="true">+10°</span>
+        <output class="deg" id="degOut" for="rotRange">0.0°</output>
+        <button class="btn small ghost" id="rotReset" disabled>Reset 0°</button>
+      </div>
+      <p class="hint">Per le scansioni storte. La selezione lavora sull'immagine già raddrizzata: si stampa quello che si vede.</p>
+    </div>
+  </section>
+
+  <div class="grid">
+
+    <!-- 03 — SELEZIONE -->
+    <section class="panel">
+      <div class="rule2" aria-hidden="true"></div>
+      <div class="panel-body">
+        <h2 class="label"><span class="n">03</span>Selezione dell'area</h2>
+        <div class="stage" id="stage">
+          <div class="empty" id="empty">
+            <strong>Zona vuota</strong>
+            Deposita qui un PDF, oppure usa il pulsante qui sopra. Poi trascina il mouse (o il dito) sul riquadro da stampare.
+          </div>
+          <div class="canvas-holder" id="holder" hidden>
+            <canvas id="viewCanvas"></canvas>
+            <div id="overlay" role="application" aria-label="Area di selezione sul documento">
+              <div id="selRect">
+                <i class="handle nw"></i><i class="handle ne"></i>
+                <i class="handle sw"></i><i class="handle se"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="hint" id="stageHint">Trascina per selezionare · dentro il riquadro per spostarlo · sugli angoli per ridimensionarlo · <kbd>Esc</kbd> per azzerare.</p>
+      </div>
+    </section>
+
+    <!-- 04 — ESECUZIONE -->
+    <section class="panel">
+      <div class="rule2" aria-hidden="true"></div>
+      <div class="panel-body">
+        <h2 class="label"><span class="n">04</span>Esecuzione</h2>
+        <div class="preview" id="preview"><span class="none">Nessun ritaglio<br>registrato.</span></div>
+        <dl class="meta">
+          <div><dt>Pagina</dt><dd id="mPage">—</dd></div>
+          <div><dt>Rotazione</dt><dd id="mRot">0.0°</dd></div>
+          <div><dt>Ritaglio</dt><dd id="mSize">—</dd></div>
+          <div><dt>Su carta</dt><dd id="mMm">—</dd></div>
+        </dl>
+        <div class="actions">
+          <button class="btn primary" id="printBtn" disabled>Stampa</button>
+          <button class="btn" id="downloadBtn" disabled>Scarica PNG</button>
+          <button class="btn ghost" id="clearBtn" disabled>Azzera selezione</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <span>Tutto gira nel browser: nessun file lascia questa macchina, nemmeno il segretario lo vede.</span>
+    <span>Stompat № 001 · <a href="https://github.com/gabrielemartire/Stompat_Studio_PDF_a_beneficio_della_gloriosa_causa_ritaglio_Stampante" rel="noopener">codice sorgente</a></span>
+  </footer>
+</div>
+
+<!-- fallback di stampa: popup bloccato e stampa da iframe non disponibile -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+  <div class="card">
+    <div class="rule2" aria-hidden="true"></div>
+    <div class="card-body">
+      <h2 class="label" id="modalTitle"><span class="n">!</span>Stampa bloccata dal comitato</h2>
+      <p>Il browser ha impedito l'apertura della finestra di stampa. Due vie d'uscita, entrambe legali:</p>
+      <img id="modalImg" alt="Anteprima del ritaglio da stampare">
+      <ol>
+        <li>autorizza i popup per questa pagina e ripremi <strong>Stampa</strong>;</li>
+        <li>oppure scarica l'immagine e stampala a mano, come ai vecchi tempi.</li>
+      </ol>
+      <div class="row">
+        <a class="btn primary" id="modalDownload" download="stompat-ritaglio.png" href="#">Scarica PNG</a>
+        <button class="btn ghost" id="modalClose">Chiudi</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="assets/js/core.js"></script>
+<script src="assets/js/view.js"></script>
+<script src="assets/js/selection.js"></script>
+<script src="assets/js/output.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
