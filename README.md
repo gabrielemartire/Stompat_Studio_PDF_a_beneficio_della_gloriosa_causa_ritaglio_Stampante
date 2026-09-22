@@ -11,8 +11,10 @@ niente upload: il file non lascia mai il browser.
 - carica un PDF da file o trascinandolo nella pagina
 - renderizza la pagina corrente a 2.2× per una stampa nitida (con tetto di sicurezza sulle pagine enormi)
 - naviga tra le pagine (anche con ← e →)
-- **rotazione fine da −10° a +10°**, passo 0.1°, per raddrizzare le scansioni storte:
-  la selezione lavora sull'immagine già ruotata, quindi si stampa esattamente ciò che si vede
+- **rotazione a 90°** a sinistra o a destra, per i PDF salvati girati
+- **inclinazione fine da −10° a +10°**, passo 0.1°, per le scansioni storte; si combina
+  con i 90°. La selezione lavora sull'immagine già ruotata, quindi si stampa
+  esattamente ciò che si vede
 - riquadro di selezione con Pointer Events: trascina per disegnarlo, trascina dentro per
   spostarlo, trascina un angolo per ridimensionarlo, `Esc` per azzerarlo
 - anteprima del ritaglio, con dimensioni in pixel e misura approssimativa in millimetri sulla carta
