@@ -96,7 +96,8 @@
           <div><dt>Su carta</dt><dd id="mMm">—</dd></div>
         </dl>
         <div class="actions">
-          <button class="btn primary" id="printBtn" disabled>Stampa</button>
+          <button class="btn primary" id="addBtn" disabled>Aggiungi alla lista</button>
+          <button class="btn" id="printBtn" disabled>Stampa solo questo</button>
           <button class="btn" id="downloadBtn" disabled>Scarica PNG</button>
           <button class="btn ghost" id="clearBtn" disabled>Annulla selezione</button>
         </div>
@@ -104,6 +105,19 @@
     </section>
 
   </div>
+
+  <section class="panel" id="queuePanel" hidden>
+    <div class="panel-body">
+      <h2 class="label">Da stampare <span class="count-badge" id="queueCount">0</span></h2>
+      <div class="queue" id="queueList"></div>
+      <div class="row queue-actions">
+        <button class="btn primary" id="printAllBtn">Stampa tutti</button>
+        <button class="btn" id="downloadAllBtn">Scarica tutti i PNG</button>
+        <button class="btn ghost" id="clearQueueBtn">Svuota la lista</button>
+      </div>
+      <p class="hint">Ogni ritaglio viene stampato su un foglio separato, nell'ordine in cui lo hai aggiunto.</p>
+    </div>
+  </section>
 
   <footer>
     <span>Tutto gira nel browser: nessun file viene caricato online.</span>
@@ -117,13 +131,13 @@
     <div class="card-body">
       <h2 class="label" id="modalTitle">Stampa bloccata dal browser</h2>
       <p>Non è stato possibile aprire la finestra di stampa. Puoi:</p>
-      <img id="modalImg" alt="Anteprima del ritaglio da stampare">
+      <div id="modalShots"></div>
       <ol>
         <li>consentire i popup per questa pagina e premere di nuovo <strong>Stampa</strong>;</li>
-        <li>oppure scaricare l'immagine e stamparla da lì.</li>
+        <li>oppure scaricare le immagini e stamparle da lì.</li>
       </ol>
       <div class="row">
-        <a class="btn primary" id="modalDownload" download="stompat-ritaglio.png" href="#">Scarica PNG</a>
+        <button class="btn primary" id="modalDownload">Scarica i PNG</button>
         <button class="btn ghost" id="modalClose">Chiudi</button>
       </div>
     </div>

@@ -18,8 +18,10 @@ niente upload: il file non lascia mai il browser.
 - riquadro di selezione con Pointer Events: trascina per disegnarlo, trascina dentro per
   spostarlo, trascina un angolo per ridimensionarlo, `Esc` per azzerarlo
 - anteprima del ritaglio, con dimensioni in pixel e misura approssimativa in millimetri sulla carta
+- **più ritagli in coda**: aggiungi quanti ritagli vuoi, anche da pagine diverse, e li stampi
+  tutti insieme — un ritaglio per foglio, nell'ordine in cui li hai aggiunti
 - **Stampa** in una finestra separata, con doppio fallback se il popup viene bloccato
-- **Scarica PNG** del solo ritaglio
+- **Scarica PNG**, del singolo ritaglio o di tutta la lista
 
 ## Come si usa
 
@@ -42,6 +44,7 @@ assets/js/selection.js     riquadro di selezione (mouse + touch)
 assets/js/output.js        ritaglio, stampa con fallback, download
 assets/js/app.js           collegamento DOM e stato dell'interfaccia
 test/selection.test.js     test della geometria di selezione (node, zero dipendenze)
+test/output.test.js        test del documento di stampa multi-foglio
 ```
 
 Script classici, nessun modulo ES: così il doppio click su `index.html` funziona
@@ -67,11 +70,13 @@ Tre vie, in ordine:
 
 ## Test
 
-La geometria della selezione (disegno, spostamento, ridimensionamento dagli angoli, clamp
-ai bordi, scarto delle aree troppo piccole) ha un test senza dipendenze:
+Due test senza dipendenze: la geometria della selezione (disegno, spostamento,
+ridimensionamento dagli angoli, clamp ai bordi, scarto delle aree troppo piccole)
+e la composizione del documento di stampa:
 
 ```sh
 node test/selection.test.js
+node test/output.test.js
 ```
 
 ## Stile

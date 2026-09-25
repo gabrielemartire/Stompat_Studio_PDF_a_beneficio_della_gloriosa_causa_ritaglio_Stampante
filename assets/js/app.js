@@ -12,6 +12,9 @@
 
   var el = {};
   var lastCrop = null;
+  var queue = [];          // ritagli in attesa di stampa
+  var blockedUrls = [];    // usati dalla finestra di dialogo di emergenza
+  var pendingNames = [];   // nomi file dei ritagli mandati in stampa
 
   document.addEventListener('DOMContentLoaded', function () {
     cacheDom();
@@ -25,11 +28,13 @@
     wireRotation();
     wireSelection();
     wireActions();
+    wireQueue();
     wireModal();
     wireKeyboard();
 
     updatePager();
     updateMeta();
+    renderQueue();
   });
 
   function cacheDom() {
@@ -37,8 +42,10 @@
       'rotRange', 'degOut', 'rotReset', 'rotLeft', 'rotRight',
       'stage', 'holder', 'empty', 'viewCanvas',
       'overlay', 'selRect', 'preview', 'mPage', 'mRot', 'mSize', 'mMm',
-      'printBtn', 'downloadBtn', 'clearBtn',
-      'modal', 'modalImg', 'modalDownload', 'modalClose'
+      'addBtn', 'printBtn', 'downloadBtn', 'clearBtn',
+      'queuePanel', 'queueList', 'queueCount',
+      'printAllBtn', 'downloadAllBtn', 'clearQueueBtn',
+      'modal', 'modalShots', 'modalDownload', 'modalClose'
     ].forEach(function (id) { el[id] = $(id); });
   }
 
@@ -96,7 +103,8 @@
   }
 
   function setActionsEnabled(on) {
-    el.printBtn.disabled = el.downloadBtn.disabled = el.clearBtn.disabled = !on;
+    el.addBtn.disabled = el.printBtn.disabled =
+      el.downloadBtn.disabled = el.clearBtn.disabled = !on;
   }
 
   function resetPreview() {
@@ -146,6 +154,8 @@
       el.degOut.textContent = '0.0°';
       selection.clear();
       resetPreview();
+      queue = [];
+      renderQueue();
       setStatus('PDF caricato: ' + info.numPages +
         (info.numPages === 1 ? ' pagina.' : ' pagine.'), 'ok');
     });
@@ -275,9 +285,31 @@
   /* ---------------- azioni ---------------- */
 
   function wireActions() {
+    el.addBtn.addEventListener('click', function () {
+      var canvas = currentCrop();
+      if (!canvas) return;
+      var s = selection.get();
+
+      queue.push({
+        canvas: canvas,
+        dataUrl: canvas.toDataURL('image/png'),
+        name: cropFileName(),
+        page: view.getPageNumber(),
+        w: s.px.w,
+        h: s.px.h
+      });
+
+      selection.clear();
+      resetPreview();
+      renderQueue();
+      setStatus('Aggiunto alla lista: ' + queue.length +
+        (queue.length === 1 ? ' ritaglio in attesa di stampa.' : ' ritagli in attesa di stampa.'), 'ok');
+    });
+
     el.printBtn.addEventListener('click', function () {
       var canvas = currentCrop();
       if (!canvas) return;
+      pendingNames = [cropFileName()];
 
       output.print(canvas, {
         title: view.getDocName() + ' — ritaglio p.' + view.getPageNumber(),
@@ -286,9 +318,7 @@
             ? 'Finestra di stampa aperta.'
             : 'Popup bloccato: stampa avviata direttamente da questa pagina.', 'ok');
         },
-        onBlocked: function (dataUrl) {
-          openModal(dataUrl);
-        }
+        onBlocked: openModal
       });
     });
 
@@ -307,12 +337,94 @@
     });
   }
 
+  /* ---------------- lista dei ritagli ---------------- */
+
+  function wireQueue() {
+    el.printAllBtn.addEventListener('click', function () {
+      if (!queue.length) return;
+      pendingNames = queue.map(function (item) { return item.name; });
+
+      output.print(queue.map(function (item) { return item.canvas; }), {
+        title: view.getDocName() + ' — ' + queue.length + ' ritagli',
+        onRoute: function (route) {
+          setStatus((route === 'window'
+            ? 'Finestra di stampa aperta: '
+            : 'Popup bloccato, stampa avviata da questa pagina: ') +
+            queue.length + (queue.length === 1 ? ' foglio.' : ' fogli.'), 'ok');
+        },
+        onBlocked: openModal
+      });
+    });
+
+    el.downloadAllBtn.addEventListener('click', function () {
+      if (!queue.length) return;
+      queue.forEach(function (item, i) {
+        global.setTimeout(function () { output.download(item.canvas, item.name); }, i * 350);
+      });
+      setStatus('Salvataggio di ' + queue.length +
+        (queue.length === 1 ? ' immagine…' : ' immagini…'), 'ok');
+    });
+
+    el.clearQueueBtn.addEventListener('click', function () {
+      queue = [];
+      renderQueue();
+      setStatus('Lista svuotata.');
+    });
+
+    el.queueList.addEventListener('click', function (e) {
+      var btn = e.target.closest ? e.target.closest('.remove') : null;
+      if (!btn) return;
+      var i = parseInt(btn.getAttribute('data-index'), 10);
+      if (isNaN(i)) return;
+      queue.splice(i, 1);
+      renderQueue();
+      setStatus(queue.length ? 'Ritaglio rimosso dalla lista.' : 'Lista svuotata.');
+    });
+  }
+
+  function renderQueue() {
+    el.queuePanel.hidden = queue.length === 0;
+    el.queueCount.textContent = queue.length;
+    el.queueList.innerHTML = '';
+
+    queue.forEach(function (item, i) {
+      var fig = document.createElement('figure');
+
+      var img = new Image();
+      img.src = item.dataUrl;
+      img.alt = 'Ritaglio ' + (i + 1) + ', pagina ' + item.page;
+
+      var cap = document.createElement('figcaption');
+      cap.textContent = 'pag. ' + item.page + ' · ' + item.w + '×' + item.h;
+
+      var rm = document.createElement('button');
+      rm.className = 'remove';
+      rm.type = 'button';
+      rm.setAttribute('data-index', i);
+      rm.setAttribute('aria-label', 'Rimuovi il ritaglio ' + (i + 1));
+      rm.textContent = '×';
+
+      fig.appendChild(img);
+      fig.appendChild(cap);
+      fig.appendChild(rm);
+      el.queueList.appendChild(fig);
+    });
+  }
+
   /* ---------------- modale di emergenza ---------------- */
 
-  function openModal(dataUrl) {
-    el.modalImg.src = dataUrl;
-    el.modalDownload.href = dataUrl;
-    el.modalDownload.download = cropFileName();
+  function openModal(dataUrls) {
+    blockedUrls = [].concat(dataUrls);
+    el.modalShots.innerHTML = '';
+    blockedUrls.forEach(function (url, i) {
+      var img = new Image();
+      img.src = url;
+      img.alt = 'Anteprima del ritaglio ' + (i + 1);
+      el.modalShots.appendChild(img);
+    });
+    el.modalDownload.textContent = blockedUrls.length > 1
+      ? 'Scarica i ' + blockedUrls.length + ' PNG'
+      : 'Scarica il PNG';
     el.modal.hidden = false;
     el.modalClose.focus();
     setStatus('Stampa bloccata dal browser: vedi le istruzioni a schermo.', 'err');
@@ -320,14 +432,20 @@
 
   function closeModal() {
     el.modal.hidden = true;
-    el.modalImg.removeAttribute('src');
-    el.printBtn.focus();
+    el.modalShots.innerHTML = '';
+    blockedUrls = [];
   }
 
   function wireModal() {
     el.modalClose.addEventListener('click', closeModal);
     el.modal.addEventListener('click', function (e) {
       if (e.target === el.modal) closeModal();
+    });
+    el.modalDownload.addEventListener('click', function () {
+      blockedUrls.forEach(function (url, i) {
+        var name = pendingNames[i] || ('stompat-ritaglio-' + (i + 1) + '.png');
+        global.setTimeout(function () { output.downloadUrl(url, name); }, i * 350);
+      });
     });
   }
 

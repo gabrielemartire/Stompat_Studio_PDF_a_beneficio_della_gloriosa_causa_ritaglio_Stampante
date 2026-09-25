@@ -28,21 +28,30 @@
 
     /* ---------- documento di stampa ---------- */
 
-    function printDocument(dataUrl, title) {
+    /* Un ritaglio per foglio, nell'ordine ricevuto. */
+    function printDocument(dataUrls, title) {
+      var sheets = dataUrls.map(function (url) {
+        return '<div class="sheet"><img src="' + url + '" alt=""></div>';
+      }).join('');
+
       return '<!DOCTYPE html><html lang="it"><head><meta charset="utf-8">' +
         '<title>' + Stompat.util.escapeHtml(title) + '</title><style>' +
         '@page{margin:10mm}' +
         'html,body{margin:0;padding:0;background:#fff}' +
+        '.sheet{page-break-after:always;break-after:page}' +
+        '.sheet:last-child{page-break-after:auto;break-after:auto}' +
         'img{display:block;max-width:100%;height:auto;margin:0 auto}' +
-        '</style></head><body><img src="' + dataUrl + '" alt=""></body></html>';
+        '</style></head><body>' + sheets + '</body></html>';
     }
 
     /* ---------- stampa ---------- */
 
-    function print(canvas, opts) {
+    /* canvases: un singolo canvas oppure un elenco di canvas */
+    function print(canvases, opts) {
       opts = opts || {};
-      var dataUrl = canvas.toDataURL('image/png');
-      var html = printDocument(dataUrl, opts.title || 'Stompat — ritaglio');
+      var list = canvases.length ? canvases : [canvases];
+      var dataUrls = list.map(function (c) { return c.toDataURL('image/png'); });
+      var html = printDocument(dataUrls, opts.title || 'Stompat — ritagli');
       var report = opts.onRoute || function () {};
       var blocked = opts.onBlocked || function () {};
 
@@ -57,13 +66,17 @@
         var fire = function () {
           try { win.focus(); win.print(); } catch (err) { console.warn('[stompat]', err); }
         };
-        var img = win.document.images[0];
-        if (img && !img.complete) {
-          img.onload = function () { global.setTimeout(fire, 80); };
-          img.onerror = function () { global.setTimeout(fire, 80); };
-        } else {
-          global.setTimeout(fire, 120);
+        var pending = 0;
+        var images = win.document.images;
+        for (var i = 0; i < images.length; i++) {
+          if (!images[i].complete) {
+            pending++;
+            images[i].onload = images[i].onerror = function () {
+              if (--pending === 0) global.setTimeout(fire, 80);
+            };
+          }
         }
+        if (!pending) global.setTimeout(fire, 120);
         report('window');
         return;
       }
@@ -71,7 +84,7 @@
       // 2 — iframe nascosto
       printViaIframe(html, function (ok) {
         if (ok) report('iframe');
-        else blocked(dataUrl);   // 3 — modale con anteprima e download
+        else blocked(dataUrls);   // 3 — finestra di dialogo con anteprime e download
       });
     }
 
@@ -123,6 +136,16 @@
 
     /* ---------- salvataggio ---------- */
 
+    function downloadUrl(href, filename) {
+      var a = document.createElement('a');
+      a.href = href;
+      a.download = filename;
+      a.rel = 'noopener';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+
     function download(canvas, filename) {
       var save = function (href, revoke) {
         var a = document.createElement('a');
@@ -145,6 +168,6 @@
       }
     }
 
-    return { crop: crop, print: print, download: download, printDocument: printDocument };
+    return { crop: crop, print: print, download: download, downloadUrl: downloadUrl, printDocument: printDocument };
   })();
 })(window);
