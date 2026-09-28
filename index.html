@@ -81,7 +81,7 @@
             </div>
           </div>
         </div>
-        <p class="hint" id="stageHint">Trascina per selezionare · trascina dentro il riquadro per spostarlo · dagli angoli per ridimensionarlo · <kbd>Esc</kbd> per annullare.</p>
+        <p class="hint" id="stageHint">Trascina per selezionare · dentro il riquadro per spostarlo · dagli angoli per ridimensionarlo · <kbd>←↑↓→</kbd> per spostare di 1&nbsp;px (<kbd>Shift</kbd> 10&nbsp;px) · <kbd>Invio</kbd> per aggiungere alla lista · <kbd>Esc</kbd> per annullare · <kbd>PagSu</kbd>/<kbd>PagGiù</kbd> per cambiare pagina.</p>
       </div>
     </section>
 
@@ -95,6 +95,20 @@
           <div><dt>Dimensioni</dt><dd id="mSize">—</dd></div>
           <div><dt>Su carta</dt><dd id="mMm">—</dd></div>
         </dl>
+
+        <fieldset class="scale">
+          <legend>Dimensione di stampa</legend>
+          <label><input type="radio" name="printScale" value="real" id="scaleReal" checked> Reale (1:1)</label>
+          <label><input type="radio" name="printScale" value="fit" id="scaleFit"> Adatta al foglio</label>
+        </fieldset>
+
+        <div class="paper-wrap">
+          <div class="paper" id="paper" role="img" aria-labelledby="paperNote">
+            <div class="paper-margin"></div>
+            <div class="paper-crop" id="paperCrop" hidden></div>
+          </div>
+          <p class="paper-note" id="paperNote">Seleziona un'area per vedere come esce sul foglio.</p>
+        </div>
         <div class="actions">
           <button class="btn primary" id="addBtn" disabled>Aggiungi alla lista</button>
           <button class="btn" id="printBtn" disabled>Stampa solo questo</button>

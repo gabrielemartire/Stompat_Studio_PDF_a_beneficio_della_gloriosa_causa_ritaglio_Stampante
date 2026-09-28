@@ -153,6 +153,21 @@
       rectEl.style.height = (sel.h * 100) + '%';
     }
 
+    /* ---------- spostamento da tastiera ---------- */
+
+    /* dx, dy in pixel del canvas: la selezione resta dentro la pagina */
+    function nudge(dx, dy) {
+      if (!sel || !canvas || !canvas.width) return false;
+      var nx = clamp(sel.x + dx / canvas.width, 0, 1 - sel.w);
+      var ny = clamp(sel.y + dy / canvas.height, 0, 1 - sel.h);
+      if (nx === sel.x && ny === sel.y) return false;
+      sel.x = nx;
+      sel.y = ny;
+      draw();
+      bus.emit('commit', get());
+      return true;
+    }
+
     /* ---------- stato ---------- */
 
     function toPixels() {
@@ -187,6 +202,7 @@
       setEnabled: setEnabled,
       get: get,
       clear: clear,
+      nudge: nudge,
       redraw: draw,
       isEmpty: function () { return !sel; }
     };

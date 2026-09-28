@@ -29,11 +29,13 @@
     wireSelection();
     wireActions();
     wireQueue();
+    wireScale();
     wireModal();
     wireKeyboard();
 
     updatePager();
     updateMeta();
+    updatePaper();
     renderQueue();
   });
 
@@ -43,6 +45,7 @@
       'stage', 'holder', 'empty', 'viewCanvas',
       'overlay', 'selRect', 'preview', 'mPage', 'mRot', 'mSize', 'mMm',
       'addBtn', 'printBtn', 'downloadBtn', 'clearBtn',
+      'scaleReal', 'scaleFit', 'paper', 'paperCrop', 'paperNote',
       'queuePanel', 'queueList', 'queueCount',
       'printAllBtn', 'downloadAllBtn', 'clearQueueBtn',
       'modal', 'modalShots', 'modalDownload', 'modalClose'
@@ -112,6 +115,82 @@
     el.preview.innerHTML = '<span class="none">Nessuna selezione.</span>';
     setActionsEnabled(false);
     updateMeta();
+    updatePaper();
+  }
+
+  /* ---------------- scala di stampa ---------------- */
+
+  function printMode() {
+    return el.scaleFit.checked ? 'fit' : 'real';
+  }
+
+  function wireScale() {
+    [el.scaleReal, el.scaleFit].forEach(function (radio) {
+      radio.addEventListener('change', function () {
+        updatePaper();
+        setStatus(printMode() === 'real'
+          ? 'Stampa a dimensione reale: il ritaglio esce nella misura indicata.'
+          : 'Stampa adattata: il ritaglio viene ingrandito fino a riempire il foglio.');
+      });
+    });
+  }
+
+  /* Anteprima: dove finisce il ritaglio su un foglio A4, alla scala scelta. */
+  function updatePaper() {
+    var paper = Stompat.PAPER;
+    var s = selection.get();
+    var mm = s && s.px ? millimetres(s.px) : null;
+
+    if (!mm || !mm.w || !mm.h) {
+      el.paperCrop.hidden = true;
+      el.paper.classList.remove('landscape');
+      el.paperNote.className = 'paper-note';
+      el.paperNote.textContent = "Seleziona un'area per vedere come esce sul foglio.";
+      return;
+    }
+
+    var real = printMode() === 'real';
+    var fitsPortrait = mm.w <= paper.printable(false).w && mm.h <= paper.printable(false).h;
+    var fitsLandscape = mm.w <= paper.printable(true).w && mm.h <= paper.printable(true).h;
+    var landscape = !fitsPortrait && fitsLandscape;
+
+    var sheet = paper.size(landscape);
+    var printable = paper.printable(landscape);
+    var shown = { w: mm.w, h: mm.h };
+
+    if (!real) {
+      // adattato: si ingrandisce (o riduce) fino al limite dell'area stampabile
+      var k = Math.min(printable.w / mm.w, printable.h / mm.h);
+      shown = { w: Math.round(mm.w * k), h: Math.round(mm.h * k) };
+    }
+
+    var over = real && !fitsPortrait && !fitsLandscape;
+    var wPct = Math.min(100, shown.w / sheet.w * 100);
+    var hPct = Math.min(100, shown.h / sheet.h * 100);
+
+    el.paper.classList.toggle('landscape', landscape);
+    el.paperCrop.hidden = false;
+    el.paperCrop.classList.toggle('over', over);
+    el.paperCrop.style.width = wPct + '%';
+    el.paperCrop.style.height = hPct + '%';
+    el.paperCrop.style.left = ((100 - wPct) / 2) + '%';
+    el.paperCrop.style.top = ((100 - hPct) / 2) + '%';
+
+    var note;
+    if (over) {
+      note = shown.w + ' × ' + shown.h + ' mm: più grande di un ' + paper.name +
+        ' (' + printable.w + ' × ' + printable.h + ' mm stampabili), i bordi verranno tagliati. ' +
+        'Usa «Adatta al foglio» o riduci la selezione.';
+    } else if (real) {
+      note = 'Esce ' + shown.w + ' × ' + shown.h + ' mm su ' + paper.name +
+        (landscape ? ', in orizzontale.' : '.');
+    } else {
+      note = 'Ingrandito a ' + shown.w + ' × ' + shown.h + ' mm su ' + paper.name +
+        (landscape ? ', in orizzontale.' : '.') +
+        ' Reale: ' + mm.w + ' × ' + mm.h + ' mm.';
+    }
+    el.paperNote.className = 'paper-note' + (over ? ' warn' : '');
+    el.paperNote.textContent = note;
   }
 
   /* ---------------- documento ---------------- */
@@ -233,7 +312,10 @@
   /* ---------------- selezione ---------------- */
 
   function wireSelection() {
-    selection.on('change', updateMeta);
+    selection.on('change', function () {
+      updateMeta();
+      updatePaper();
+    });
 
     selection.on('commit', function (s) {
       buildPreview(s);
@@ -247,7 +329,10 @@
       setStatus("Selezione troppo piccola: riprova trascinando un'area più grande.");
     });
 
-    selection.on('clear', updateMeta);
+    selection.on('clear', function () {
+      updateMeta();
+      updatePaper();
+    });
   }
 
   function buildPreview(s) {
@@ -262,6 +347,7 @@
 
     setActionsEnabled(true);
     updateMeta();
+    updatePaper();
   }
 
   function currentCrop() {
@@ -296,7 +382,8 @@
         name: cropFileName(),
         page: view.getPageNumber(),
         w: s.px.w,
-        h: s.px.h
+        h: s.px.h,
+        mm: millimetres(s.px)
       });
 
       selection.clear();
@@ -310,9 +397,12 @@
       var canvas = currentCrop();
       if (!canvas) return;
       pendingNames = [cropFileName()];
+      var mm = millimetres(selection.get().px);
 
       output.print(canvas, {
         title: view.getDocName() + ' — ritaglio p.' + view.getPageNumber(),
+        mode: printMode(),
+        sizes: [mm],
         onRoute: function (route) {
           setStatus(route === 'window'
             ? 'Finestra di stampa aperta.'
@@ -346,6 +436,8 @@
 
       output.print(queue.map(function (item) { return item.canvas; }), {
         title: view.getDocName() + ' — ' + queue.length + ' ritagli',
+        mode: printMode(),
+        sizes: queue.map(function (item) { return item.mm; }),
         onRoute: function (route) {
           setStatus((route === 'window'
             ? 'Finestra di stampa aperta: '
@@ -395,7 +487,8 @@
       img.alt = 'Ritaglio ' + (i + 1) + ', pagina ' + item.page;
 
       var cap = document.createElement('figcaption');
-      cap.textContent = 'pag. ' + item.page + ' · ' + item.w + '×' + item.h;
+      cap.textContent = 'pag. ' + item.page +
+        (item.mm ? ' · ' + item.mm.w + '×' + item.mm.h + ' mm' : ' · ' + item.w + '×' + item.h + ' px');
 
       var rm = document.createElement('button');
       rm.className = 'remove';
@@ -451,6 +544,10 @@
 
   /* ---------------- tastiera ---------------- */
 
+  var ARROWS = {
+    ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1]
+  };
+
   function wireKeyboard() {
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') {
@@ -464,10 +561,34 @@
       }
 
       var tag = document.activeElement && document.activeElement.tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA' || !view.hasDocument()) return;
+      var typing = tag === 'INPUT' || tag === 'TEXTAREA';
+      if (!view.hasDocument()) return;
 
-      if (e.key === 'ArrowLeft' && view.prev()) { afterPageChange(); e.preventDefault(); }
-      if (e.key === 'ArrowRight' && view.next()) { afterPageChange(); e.preventDefault(); }
+      // PagSu / PagGiù: cambio pagina, sempre
+      if (e.key === 'PageUp' && view.prev()) { afterPageChange(); e.preventDefault(); return; }
+      if (e.key === 'PageDown' && view.next()) { afterPageChange(); e.preventDefault(); return; }
+
+      if (typing) return;   // lo slider usa le sue frecce
+
+      // Invio: aggiunge il ritaglio alla lista
+      if (e.key === 'Enter' && !el.addBtn.disabled) {
+        el.addBtn.click();
+        e.preventDefault();
+        return;
+      }
+
+      var step = ARROWS[e.key];
+      if (!step) return;
+
+      if (!selection.isEmpty()) {
+        // frecce: spostano la selezione di 1 px, con Shift di 10
+        var d = e.shiftKey ? 10 : 1;
+        selection.nudge(step[0] * d, step[1] * d);
+        e.preventDefault();
+      } else if (step[1] === 0) {
+        // senza selezione, sinistra/destra cambiano pagina
+        if (step[0] < 0 ? view.prev() : view.next()) { afterPageChange(); e.preventDefault(); }
+      }
     });
   }
 })(window);

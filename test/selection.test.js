@@ -51,5 +51,17 @@ events.length=0;
 drag(50,50,52,52);
 eq('area troppo piccola -> nessuna selezione', [S.isEmpty(), events.includes('toosmall')], [true,true]);
 
+// frecce da tastiera: spostamento di 1 px e clamp ai bordi
+drag(100,100,300,400);
+const before = S.get().px;
+S.nudge(5, -3);
+eq('nudge sposta di pochi pixel', S.get().px, {x:before.x+5, y:before.y-3, w:before.w, h:before.h});
+
+S.nudge(-100000, -100000);
+const atEdge = S.get().px;
+eq('nudge non esce dalla pagina', [atEdge.x, atEdge.y], [0, 0]);
+eq('nudge conserva le dimensioni', [atEdge.w, atEdge.h], [before.w, before.h]);
+
 S.clear();
 eq('clear -> vuota', S.isEmpty(), true);
+eq('nudge senza selezione non fa nulla', S.nudge(5, 5), false);

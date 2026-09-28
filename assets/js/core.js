@@ -7,7 +7,27 @@
 
   var Stompat = global.Stompat || (global.Stompat = {});
 
-  Stompat.VERSION = '1.0.0';
+  Stompat.VERSION = '1.1.0';
+
+  /* Foglio di riferimento per l'anteprima e per la stampa in scala reale.
+     I margini corrispondono a @page{margin:10mm} del documento di stampa. */
+  Stompat.PAPER = {
+    name: 'A4',
+    width: 210,
+    height: 297,
+    margin: 10,
+    /* area stampabile, in mm, nei due orientamenti */
+    printable: function (landscape) {
+      var w = landscape ? this.height : this.width;
+      var h = landscape ? this.width : this.height;
+      return { w: w - this.margin * 2, h: h - this.margin * 2 };
+    },
+    size: function (landscape) {
+      return landscape
+        ? { w: this.height, h: this.width }
+        : { w: this.width, h: this.height };
+    }
+  };
 
   /* ---- mini event bus ---- */
   Stompat.emitter = function emitter() {

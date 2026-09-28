@@ -198,6 +198,43 @@ dl.meta dd{margin:0;font-variant-numeric:tabular-nums;text-align:right}
 .actions{display:flex;flex-direction:column;gap:8px}
 .actions .btn{width:100%;text-align:center}
 
+/* ---------- scala di stampa e anteprima sul foglio ---------- */
+fieldset.scale{
+  margin:0 0 16px;padding:0;border:0;
+}
+fieldset.scale legend{
+  padding:0;margin-bottom:8px;
+  font-size:12px;color:var(--muted);
+}
+fieldset.scale label{
+  display:flex;align-items:center;gap:8px;
+  font-size:13px;padding:3px 0;cursor:pointer;
+}
+fieldset.scale input{accent-color:var(--accent);margin:0}
+
+.paper-wrap{margin-bottom:16px}
+.paper{
+  position:relative;width:96px;aspect-ratio:210/297;margin:0 auto;
+  background:#fff;border:1px solid var(--line-strong);border-radius:2px;
+  box-shadow:0 1px 2px rgba(16,20,28,.10);
+}
+.paper.landscape{width:132px;aspect-ratio:297/210}
+.paper-margin{
+  position:absolute;inset:3.37% 4.76%;
+  border:1px dashed var(--line);
+}
+.paper.landscape .paper-margin{inset:4.76% 3.37%}
+.paper-crop{
+  position:absolute;
+  background:var(--accent-wash);border:1px solid var(--accent);
+}
+.paper-crop[hidden]{display:none}
+.paper-crop.over{border-style:dashed;background:transparent}
+.paper-note{
+  margin:10px 0 0;font-size:12px;line-height:1.45;color:var(--muted);text-align:center;
+}
+.paper-note.warn{color:var(--accent-ink)}
+
 /* ---------- lista dei ritagli ---------- */
 .count-badge{
   display:inline-block;min-width:20px;padding:1px 7px;margin-left:6px;

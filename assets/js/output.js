@@ -28,19 +28,30 @@
 
     /* ---------- documento di stampa ---------- */
 
-    /* Un ritaglio per foglio, nell'ordine ricevuto. */
-    function printDocument(dataUrls, title) {
-      var sheets = dataUrls.map(function (url) {
-        return '<div class="sheet"><img src="' + url + '" alt=""></div>';
+    /* Un ritaglio per foglio, nell'ordine ricevuto.
+       opts.mode: 'real' stampa alle dimensioni reali in mm, 'fit' adatta al foglio.
+       opts.sizes: [{w, h}] in millimetri, uno per ritaglio, richiesto da 'real'. */
+    function printDocument(dataUrls, title, opts) {
+      opts = opts || {};
+      var real = opts.mode === 'real';
+      var sizes = opts.sizes || [];
+
+      var sheets = dataUrls.map(function (url, i) {
+        var mm = sizes[i];
+        var style = (real && mm && mm.w && mm.h)
+          ? ' style="width:' + mm.w + 'mm;height:' + mm.h + 'mm"'
+          : '';
+        return '<div class="sheet"><img src="' + url + '" alt=""' + style + '></div>';
       }).join('');
 
       return '<!DOCTYPE html><html lang="it"><head><meta charset="utf-8">' +
         '<title>' + Stompat.util.escapeHtml(title) + '</title><style>' +
-        '@page{margin:10mm}' +
+        '@page{margin:' + Stompat.PAPER.margin + 'mm}' +
         'html,body{margin:0;padding:0;background:#fff}' +
         '.sheet{page-break-after:always;break-after:page}' +
         '.sheet:last-child{page-break-after:auto;break-after:auto}' +
-        'img{display:block;max-width:100%;height:auto;margin:0 auto}' +
+        'img{display:block;margin:0 auto}' +
+        (real ? 'img{max-width:none}' : 'img{max-width:100%;height:auto}') +
         '</style></head><body>' + sheets + '</body></html>';
     }
 
@@ -51,7 +62,10 @@
       opts = opts || {};
       var list = canvases.length ? canvases : [canvases];
       var dataUrls = list.map(function (c) { return c.toDataURL('image/png'); });
-      var html = printDocument(dataUrls, opts.title || 'Stompat — ritagli');
+      var html = printDocument(dataUrls, opts.title || 'Stompat — ritagli', {
+        mode: opts.mode,
+        sizes: opts.sizes
+      });
       var report = opts.onRoute || function () {};
       var blocked = opts.onBlocked || function () {};
 

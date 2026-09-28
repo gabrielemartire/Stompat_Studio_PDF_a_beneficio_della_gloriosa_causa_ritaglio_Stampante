@@ -20,6 +20,10 @@ niente upload: il file non lascia mai il browser.
 - anteprima del ritaglio, con dimensioni in pixel e misura approssimativa in millimetri sulla carta
 - **più ritagli in coda**: aggiungi quanti ritagli vuoi, anche da pagine diverse, e li stampi
   tutti insieme — un ritaglio per foglio, nell'ordine in cui li hai aggiunti
+- **stampa a dimensione reale (1:1)** oppure adattata al foglio, con un'anteprima che mostra
+  dove finisce il ritaglio su un A4 e avverte se non ci sta
+- **scorciatoie**: frecce per spostare la selezione di 1 px (`Shift` 10 px), `Invio` per
+  aggiungerla alla lista, `PagSu`/`PagGiù` per cambiare pagina, `Esc` per annullare
 - **Stampa** in una finestra separata, con doppio fallback se il popup viene bloccato
 - **Scarica PNG**, del singolo ritaglio o di tutta la lista
 
@@ -57,6 +61,16 @@ La rotazione viene applicata ridisegnandolo su un secondo canvas, dimensionato p
 contenere gli angoli senza tagliarli (`w·|cos| + h·|sin|` per il lato, e simmetrico per l'altro).
 Selezione, anteprima, stampa e download leggono tutti da **quel** canvas.
 Cambiare l'angolo annulla la selezione corrente, perché le coordinate non sarebbero più valide.
+
+### Come funziona la scala di stampa
+
+In modalità **reale** ogni immagine riceve una larghezza e un'altezza esplicite in millimetri,
+calcolate dai punti PDF (`px / pxPerPoint · 25.4 / 72`): il ritaglio esce sulla carta
+nella stessa misura che aveva nel documento. In modalità **adatta al foglio** l'immagine viene
+ingrandita fino al limite dell'area stampabile. L'anteprima accanto ai pulsanti disegna il
+ritaglio dentro un A4 (con i margini di `@page`), ruota il foglio in orizzontale quando serve
+e segnala in rosso i ritagli troppo grandi. Il formato di riferimento sta in un posto solo,
+`Stompat.PAPER` in `assets/js/core.js`.
 
 ### Come funziona la stampa
 
