@@ -45,6 +45,9 @@ assets/css/stompat.css     palette, tipografia, layout
 assets/js/core.js          namespace, event bus, utilità
 assets/js/view.js          PDF.js, render della pagina, rotazione fine
 assets/js/ruler.js         righelli in millimetri attorno alla pagina
+assets/js/motion.js        movimento: ingresso dei blocchi, contapagine a rullo
+assets/js/styles.js        prova grafica: cambia veste con i tasti 1-2
+assets/css/themes.css      prova grafica: la veste alternativa
 assets/js/selection.js     riquadro di selezione (mouse + touch)
 assets/js/output.js        ritaglio, stampa con fallback, download
 assets/js/app.js           collegamento DOM e stato dell'interfaccia

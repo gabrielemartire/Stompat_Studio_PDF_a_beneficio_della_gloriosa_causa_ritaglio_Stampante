@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Stompat">
   <rect width="32" height="32" fill="#ffffff"/>
-  <g fill="none" stroke="#0a0a0a" stroke-width="4">
+  <g fill="none" stroke="#8f1220" stroke-width="4">
     <path d="M0 5H9A21 21 0 0 1 30 26V32"/>
     <path d="M0 13H9A13 13 0 0 1 22 26V32"/>
     <path d="M0 21H9A5 5 0 0 1 14 26V32"/>

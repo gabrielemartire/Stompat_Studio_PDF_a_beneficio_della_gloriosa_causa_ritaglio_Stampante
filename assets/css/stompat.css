@@ -17,6 +17,9 @@
 .wrap{counter-reset:sec}
 .wrap .panel{counter-increment:sec}
 
+/* pezzi creati dagli script: li accende solo la veste che li usa */
+.ruler,.xhair{display:none}
+
 *{box-sizing:border-box}
 html,body{margin:0}
 body{
@@ -286,8 +289,8 @@ footer a:hover{color:var(--accent)}
 
 /* ---------- il motivo: righe parallele che piegano di 90° ---------- */
 /* in fondo alla pagina, a tutta larghezza: arrivano da sinistra ed escono dal formato in basso */
-:root body{padding-bottom:0}
-:root body::after{
+:root:not([data-style]) body{padding-bottom:0}
+:root:not([data-style]) body::after{
   content:"";display:block;height:168px;margin:64px -16px 0;
   background:
     repeating-linear-gradient(to top,transparent 0 16px,var(--deep) 16px 28px) 0 0/calc(100% - 168px) 100% no-repeat,
@@ -295,125 +298,136 @@ footer a:hover{color:var(--accent)}
 }
 
 /* ---------- testata ---------- */
-:root .masthead{padding:28px 0 20px}
-:root h1{
+:root:not([data-style]) .masthead{padding:28px 0 20px}
+:root:not([data-style]) h1{
   max-width:none;font-size:13px;font-weight:600;line-height:1.3;letter-spacing:0;
 }
-:root h1 .a{
+:root:not([data-style]) h1 .a{
   display:block;font-size:clamp(72px,21vw,132px);font-weight:900;
   line-height:.8;letter-spacing:-.045em;margin-bottom:10px;color:var(--deep);
 }
 @media (min-width:900px){
-  :root .wrap{
+  :root:not([data-style]) .wrap{
     max-width:1240px;display:grid;
     grid-template-columns:176px minmax(0,1fr);column-gap:36px;
   }
-  :root .wrap>*{grid-column:2;min-width:0}
-  :root .masthead{grid-column:1;grid-row:1/span 5;padding:28px 0 0}
+  :root:not([data-style]) .wrap>*{grid-column:2;min-width:0}
+  :root:not([data-style]) .masthead{grid-column:1;grid-row:1/span 5;padding:28px 0 0}
   /* titolo enorme ruotato di 90°, si legge dal basso verso l'alto */
-  :root h1{
+  :root:not([data-style]) h1{
     position:sticky;top:64px;
     writing-mode:vertical-rl;transform:rotate(180deg);
     height:min(640px,calc(100vh - 96px));
   }
-  :root h1 .a{font-size:min(150px,calc((100vh - 110px) / 4.3));margin:0 0 0 12px}
-  :root .wrap>.panel:first-of-type{margin-top:28px}
+  :root:not([data-style]) h1 .a{font-size:min(150px,calc((100vh - 110px) / 4.3));margin:0 0 0 12px}
+  :root:not([data-style]) .wrap>.panel:first-of-type{margin-top:28px}
 }
 
 /* ---------- sezioni: riga nera, numero grande tagliato, nome ---------- */
-:root .panel{border:0;border-top:6px solid var(--ink);margin-bottom:0;background:none}
-:root .panel-body{padding:0 0 44px}
-:root .grid{gap:36px}
-:root .panel .label{
+:root:not([data-style]) .panel{border:0;border-top:6px solid var(--ink);margin-bottom:0;background:none}
+:root:not([data-style]) .panel-body{padding:0 0 44px}
+:root:not([data-style]) .grid{gap:36px}
+:root:not([data-style]) .panel .label{
   position:relative;display:flex;align-items:flex-end;gap:10px;
   height:66px;margin:0 0 24px;padding:0 0 4px 126px;overflow:hidden;
   font-size:11px;font-weight:800;line-height:1;text-transform:uppercase;letter-spacing:.09em;
 }
 /* il numero è più alto della sua finestra: la riga nera gli taglia la testa */
-:root .panel .label::before{
+:root:not([data-style]) .panel .label::before{
   content:counter(sec,decimal-leading-zero);
   position:absolute;left:-5px;bottom:-.17em;
   font-size:100px;font-weight:900;line-height:1;letter-spacing:-.05em;
 }
 /* il numero rosso è il passo da fare adesso: carica, poi seleziona, poi ritaglia */
-html:root:not(:has(#holder:not([hidden]))) .wrap>.panel:first-of-type .label::before,
-html:root:has(#holder:not([hidden])):not(:has(#preview img)) .grid>.panel:first-child .label::before,
-html:root:has(#preview img) .grid>.panel:last-child .label::before{color:var(--accent)}
-:root .panel .label::before{transition:color .25s}
-:root .hint{margin-top:14px;line-height:1.5}
+html:root:not([data-style]):not(:has(#holder:not([hidden]))) .wrap>.panel:first-of-type .label::before,
+html:root:not([data-style]):has(#holder:not([hidden])):not(:has(#preview img)) .grid>.panel:first-child .label::before,
+html:root:not([data-style]):has(#preview img) .grid>.panel:last-child .label::before{color:var(--accent)}
+:root:not([data-style]) .panel .label::before{transition:color .25s}
+:root:not([data-style]) .hint{margin-top:14px;line-height:1.5}
 
 /* ---------- controlli: nero di base, rosso solo per l'azione ---------- */
-:root .btn{border-radius:0;border-width:2px;font-weight:700}
-:root .btn:hover:not(:disabled){background:var(--ink);color:#fff}
-:root .btn.primary:hover:not(:disabled),
-:root .btn.file:hover{background:var(--ink);border-color:var(--ink)}
+:root:not([data-style]) .btn{border-radius:0;border-width:2px;font-weight:700}
+:root:not([data-style]) .btn:hover:not(:disabled){background:var(--ink);color:#fff}
+:root:not([data-style]) .btn.primary:hover:not(:disabled),
+:root:not([data-style]) .btn.file:hover{background:var(--ink);border-color:var(--ink)}
 /* a documento caricato "Carica PDF" ha fatto il suo: torna nero */
-html:root:has(#holder:not([hidden])) .btn.file{background:var(--ink);border-color:var(--ink)}
-html:root:has(#holder:not([hidden])) .btn.file:hover{background:var(--accent);border-color:var(--accent)}
-:root .btn.ghost{text-decoration:underline;text-underline-offset:3px;color:var(--ink)}
-:root .btn.ghost:hover:not(:disabled){border-color:var(--ink)}
-:root kbd,
-:root .queue figure,
-:root .queue img{border-radius:0}
-:root .count-badge{border-radius:0;background:var(--ink)}
-:root input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--ink);border-radius:0}
-:root input[type=range]::-moz-range-track{height:2px;background:var(--ink);border-radius:0}
-:root input[type=range]::-webkit-slider-thumb{margin-top:-7px;border:0;box-shadow:none}
+html:root:not([data-style]):has(#holder:not([hidden])) .btn.file{background:var(--ink);border-color:var(--ink)}
+html:root:not([data-style]):has(#holder:not([hidden])) .btn.file:hover{background:var(--accent);border-color:var(--accent)}
+:root:not([data-style]) .btn.ghost{text-decoration:underline;text-underline-offset:3px;color:var(--ink)}
+:root:not([data-style]) .btn.ghost:hover:not(:disabled){border-color:var(--ink)}
+:root:not([data-style]) kbd,
+:root:not([data-style]) .queue figure,
+:root:not([data-style]) .queue img{border-radius:0}
+:root:not([data-style]) .count-badge{border-radius:0;background:var(--ink)}
+:root:not([data-style]) input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--ink);border-radius:0}
+:root:not([data-style]) input[type=range]::-moz-range-track{height:2px;background:var(--ink);border-radius:0}
+:root:not([data-style]) input[type=range]::-webkit-slider-thumb{margin-top:-7px;border:0;box-shadow:none}
 
 /* ---------- area del documento ---------- */
-/* le righe corrono lungo il bordo basso e risalgono a destra, lontane dai righelli */
-:root .stage{
+/* le righe partono da sinistra lungo il bordo alto, piegano a destra e scendono */
+:root:not([data-style]) .stage{
   border:2px solid var(--deep);border-radius:0;padding:36px 16px 16px 40px;
   background:
-    repeating-linear-gradient(to bottom,transparent 0 10px,var(--deep) 10px 12px) 0 100%/calc(100% - 108px) 108px no-repeat,
-    radial-gradient(circle at 0 0,transparent 0,transparent 9.6px,var(--deep) 10.4px,var(--deep) 11.6px,transparent 12.4px,transparent 21.6px,var(--deep) 22.4px,var(--deep) 23.6px,transparent 24.4px,transparent 33.6px,var(--deep) 34.4px,var(--deep) 35.6px,transparent 36.4px,transparent 45.6px,var(--deep) 46.4px,var(--deep) 47.6px,transparent 48.4px,transparent 57.6px,var(--deep) 58.4px,var(--deep) 59.6px,transparent 60.4px,transparent 69.6px,var(--deep) 70.4px,var(--deep) 71.6px,transparent 72.4px,transparent 81.6px,var(--deep) 82.4px,var(--deep) 83.6px,transparent 84.4px,transparent 93.6px,var(--deep) 94.4px,var(--deep) 95.6px,transparent 96.4px,transparent 105.6px,var(--deep) 106.4px,var(--deep) 107.6px,transparent 108.4px) 100% 100%/108px 108px no-repeat,
-    repeating-linear-gradient(to right,transparent 0 10px,var(--deep) 10px 12px) 100% 0/108px calc(100% - 108px) no-repeat,
+    repeating-linear-gradient(to top,transparent 0 10px,var(--deep) 10px 12px) 0 0/calc(100% - 108px) 108px no-repeat,
+    radial-gradient(circle at 0 100%,transparent 0,transparent 9.6px,var(--deep) 10.4px,var(--deep) 11.6px,transparent 12.4px,transparent 21.6px,var(--deep) 22.4px,var(--deep) 23.6px,transparent 24.4px,transparent 33.6px,var(--deep) 34.4px,var(--deep) 35.6px,transparent 36.4px,transparent 45.6px,var(--deep) 46.4px,var(--deep) 47.6px,transparent 48.4px,transparent 57.6px,var(--deep) 58.4px,var(--deep) 59.6px,transparent 60.4px,transparent 69.6px,var(--deep) 70.4px,var(--deep) 71.6px,transparent 72.4px,transparent 81.6px,var(--deep) 82.4px,var(--deep) 83.6px,transparent 84.4px,transparent 93.6px,var(--deep) 94.4px,var(--deep) 95.6px,transparent 96.4px,transparent 105.6px,var(--deep) 106.4px,var(--deep) 107.6px,transparent 108.4px) 100% 0/108px 108px no-repeat,
+    repeating-linear-gradient(to right,transparent 0 10px,var(--deep) 10px 12px) 100% 100%/108px calc(100% - 108px) no-repeat,
     var(--bg);
 }
 /* con un documento aperto il fondo resta pulito: contano la pagina e i righelli */
-:root .stage:has(.canvas-holder:not([hidden])){background:var(--bg);border-color:var(--ink)}
-:root .stage.drop{border-color:var(--accent);background:var(--accent-wash)}
-:root .empty{max-width:46ch;color:var(--ink);background:var(--bg);padding:22px 28px}
-:root .empty strong{font-size:22px;font-weight:900;letter-spacing:-.02em}
+:root:not([data-style]) .stage:has(.canvas-holder:not([hidden])){background:var(--bg);border-color:var(--ink)}
+:root:not([data-style]) .stage.drop{border-color:var(--accent);background:var(--accent-wash)}
+:root:not([data-style]) .empty{max-width:46ch;color:var(--ink);padding:0 28px;margin-top:96px}
+:root:not([data-style]) .empty strong{font-size:22px;font-weight:900;letter-spacing:-.02em}
 
 /* righello in millimetri, in scala con la pagina (le tacche: 5 e 10 mm) */
-:root .ruler{
+:root:not([data-style]) .ruler{
   display:block;position:absolute;pointer-events:none;
   font:600 9px/1 var(--body);color:var(--ink);font-variant-numeric:tabular-nums;
 }
-:root .ruler span{position:absolute}
-:root .ruler-x{
+:root:not([data-style]) .ruler span{position:absolute}
+:root:not([data-style]) .ruler-x{
   left:0;right:0;bottom:100%;height:20px;border-bottom:1px solid var(--ink);
   background:
     repeating-linear-gradient(to right,var(--ink) 0 1px,transparent 1px calc(var(--mm) * 10)) 0 100%/100% 9px no-repeat,
     repeating-linear-gradient(to right,var(--ink) 0 1px,transparent 1px calc(var(--mm) * 5)) 0 100%/100% 5px no-repeat;
 }
-:root .ruler-x span{top:0;padding-left:3px}
-:root .ruler-y{
+:root:not([data-style]) .ruler-x span{top:0;padding-left:3px}
+:root:not([data-style]) .ruler-y{
   top:0;bottom:0;right:100%;width:24px;border-right:1px solid var(--ink);
   background:
     repeating-linear-gradient(to bottom,var(--ink) 0 1px,transparent 1px calc(var(--mm) * 10)) 100% 0/9px 100% no-repeat,
     repeating-linear-gradient(to bottom,var(--ink) 0 1px,transparent 1px calc(var(--mm) * 5)) 100% 0/5px 100% no-repeat;
 }
-:root .ruler-y span{right:11px;padding-top:3px}
+:root:not([data-style]) .ruler-y span{right:11px;padding-top:3px}
+
+/* mirino: due righe dal puntatore fino ai righelli, con i millimetri */
+:root:not([data-style]) .xhair-on .xhair{display:block;position:absolute;pointer-events:none;background:var(--ink);opacity:.8}
+:root:not([data-style]) .xhair-v{top:-20px;bottom:0;width:1px}
+:root:not([data-style]) .xhair-h{left:-24px;right:0;height:1px}
+:root:not([data-style]) .xhair b{
+  position:absolute;padding:2px 3px;background:var(--ink);color:#fff;
+  font:700 9px/1 var(--body);font-variant-numeric:tabular-nums;
+}
+:root:not([data-style]) .xhair-v b{top:0;left:2px}
+:root:not([data-style]) .xhair-h b{left:0;top:2px}
 
 /* selezione: crocini di taglio al posto dei pallini (la presa resta sull'angolo) */
-:root #selRect{border-color:var(--accent)}
+:root:not([data-style]) #selRect{border-color:var(--accent)}
 /* il velo scuro si ferma al bordo della pagina, senza coprire i righelli */
-:root #overlay{overflow:hidden}
-:root .handle{
+:root:not([data-style]) #overlay{overflow:hidden}
+:root:not([data-style]) .handle{
   width:20px;height:20px;border:0;border-radius:0;
   background:linear-gradient(var(--accent),var(--accent)),linear-gradient(var(--accent),var(--accent));
   background-repeat:no-repeat;background-size:13px 2px,2px 13px;
   filter:drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff);
 }
-:root .handle.nw{left:-19px;top:-19px;right:auto;bottom:auto;background-position:0 100%,100% 0}
-:root .handle.ne{right:-19px;top:-19px;left:auto;bottom:auto;background-position:100% 100%,0 0}
-:root .handle.sw{left:-19px;bottom:-19px;right:auto;top:auto;background-position:0 0,100% 100%}
-:root .handle.se{right:-19px;bottom:-19px;left:auto;top:auto;background-position:100% 0,0 100%}
+:root:not([data-style]) .handle.nw{left:-19px;top:-19px;right:auto;bottom:auto;background-position:0 100%,100% 0}
+:root:not([data-style]) .handle.ne{right:-19px;top:-19px;left:auto;bottom:auto;background-position:100% 100%,0 0}
+:root:not([data-style]) .handle.sw{left:-19px;bottom:-19px;right:auto;top:auto;background-position:0 0,100% 100%}
+:root:not([data-style]) .handle.se{right:-19px;bottom:-19px;left:auto;top:auto;background-position:100% 0,0 100%}
 
 /* ---------- ritaglio: anteprima dentro i crocini ---------- */
-:root .preview{
+:root:not([data-style]) .preview{
   --m:var(--ink);
   border:0;border-radius:0;padding:22px;min-height:164px;
   background:
@@ -426,6 +440,83 @@ html:root:has(#holder:not([hidden])) .btn.file:hover{background:var(--accent);bo
     linear-gradient(var(--m),var(--m)) 100% calc(100% - 16px)/11px 1px no-repeat,
     linear-gradient(var(--m),var(--m)) calc(100% - 16px) 100%/1px 11px no-repeat;
 }
-:root .preview img{border-radius:0;outline:1px solid var(--line)}
-:root .paper{border-radius:0;box-shadow:none;border-color:var(--ink)}
-:root footer{border-top-width:2px;margin-top:0}
+:root:not([data-style]) .preview img{border-radius:0;outline:1px solid var(--line)}
+:root:not([data-style]) .paper{border-radius:0;box-shadow:none;border-color:var(--ink)}
+:root:not([data-style]) footer{border-top-width:2px;margin-top:0}
+
+
+/* =====================================================================
+   Movimento
+   Tutto dentro "no-preference": chi ha chiesto meno movimento non vede nulla.
+   Le classi js-motion e in le mette assets/js/motion.js.
+   ===================================================================== */
+@media (prefers-reduced-motion:no-preference){
+
+  /* ---------- testata: il titolo si scopre nel verso in cui si legge ---------- */
+  h1{animation:fade-in .6s .5s both}
+  h1 .a{animation:title-in 1.1s cubic-bezier(.2,.7,.1,1) both}
+  @keyframes title-in{from{clip-path:inset(0 100% 0 0)} to{clip-path:inset(0)}}
+  @keyframes fade-in{from{opacity:0} to{opacity:1}}
+  @media (min-width:900px){
+    :root:not([data-style]) h1 .a{animation-name:title-in-vertical}
+    @keyframes title-in-vertical{from{clip-path:inset(0 0 100% 0)} to{clip-path:inset(0)}}
+  }
+
+  /* ---------- sezioni: la riga nera si disegna, il numero sale da sotto ---------- */
+  .js-motion:not([data-style]) .panel{position:relative;border-top-color:transparent}
+  .js-motion:not([data-style]) .panel::before{
+    content:"";position:absolute;left:0;right:0;top:-6px;height:6px;background:var(--ink);
+    transform:scaleX(0);transform-origin:left;
+    transition:transform .8s cubic-bezier(.2,.7,.1,1);transition-delay:inherit;
+  }
+  .js-motion:not([data-style]) .panel.in::before{transform:none}
+  .js-motion:not([data-style]) .panel .label::before{
+    transform:translateY(105%);
+    transition:transform .8s cubic-bezier(.2,.7,.1,1) .12s,color .25s;
+  }
+  .js-motion:not([data-style]) .panel.in .label::before{transform:none}
+
+  /* ---------- contenuto: arriva dal basso quando entra a schermo ---------- */
+  /* la riga di stato resta fuori: app.js le riscrive le classi a ogni messaggio */
+  .js-motion .panel-body>*:not(.label):not(.status),
+  .js-motion .wrap>footer{
+    opacity:0;transform:translateY(22px);
+    transition:opacity .6s ease-out,transform .7s cubic-bezier(.2,.7,.1,1);
+  }
+  .js-motion .panel-body>.in:not(.label):not(.status),
+  .js-motion .wrap>footer.in{opacity:1;transform:none}
+
+  /* ---------- il passo in corso: il numero rientra da sotto, già rosso ---------- */
+  html:root:not([data-style]):not(:has(#holder:not([hidden]))) .wrap>.panel:first-of-type .label::before,
+  html:root:not([data-style]):has(#holder:not([hidden])):not(:has(#preview img)) .grid>.panel:first-child .label::before,
+  html:root:not([data-style]):has(#preview img) .grid>.panel:last-child .label::before{
+    animation:step-in .75s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes step-in{
+    0%{transform:translateY(105%)}
+    70%{transform:translateY(-5%)}
+    100%{transform:none}
+  }
+
+  /* ---------- ritagli: l'anteprima e le miniature compaiono con uno scatto ---------- */
+  .preview img,
+  .queue figure{animation:pop-in .35s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes pop-in{from{opacity:0;transform:scale(.94)} to{opacity:1;transform:none}}
+  .btn:active:not(:disabled){transform:translateY(1px)}
+
+  /* ---------- le righe di fondo si disegnano mentre arrivi in fondo alla pagina ---------- */
+  @supports (animation-timeline:view()){
+    :root:not([data-style]) body::after{
+      animation:band-draw linear both;
+      animation-timeline:view();
+      animation-range:entry 0% entry 100%;
+    }
+    @keyframes band-draw{from{clip-path:inset(0 100% 0 0)} to{clip-path:inset(0)}}
+  }
+}
+
+/* contapagine a rullo */
+.pager .count.roll-up{animation:roll-up .38s cubic-bezier(.2,.8,.2,1)}
+.pager .count.roll-down{animation:roll-down .38s cubic-bezier(.2,.8,.2,1)}
+@keyframes roll-up{0%{transform:translateY(90%);opacity:0} 65%{transform:translateY(-10%);opacity:1} 100%{transform:none}}
+@keyframes roll-down{0%{transform:translateY(-90%);opacity:0} 65%{transform:translateY(10%);opacity:1} 100%{transform:none}}
