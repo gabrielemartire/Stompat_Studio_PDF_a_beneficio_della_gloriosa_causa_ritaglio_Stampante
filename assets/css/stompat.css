@@ -1,45 +1,21 @@
 /* Stompat — stile
-   Interfaccia neutra e tranquilla: grigi tenui, un solo accento,
-   font display riservato al titolo. */
+   Prima la struttura (misure, griglie, stati), poi la veste grafica da poster
+   svizzero: pagina bianca, righe nere, numeri grandi, rosso solo dove si agisce. */
 
 :root{
-  --bg:#f4f5f7;
-  --panel:#ffffff;
-  --ink:#1f2227;
-  --muted:#6b7280;
-  --line:#e4e6ea;
-  --line-strong:#cdd1d8;
-  --accent:#9E2A2B;
-  --accent-ink:#842223;
-  --accent-wash:rgba(158,42,43,.10);
-  --field:#ffffff;
-  --shadow:0 1px 2px rgba(16,20,28,.05), 0 6px 20px rgba(16,20,28,.04);
-  --radius:10px;
-  --display:"Russo One",Impact,"Arial Narrow",sans-serif;
-  --body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  color-scheme:light;
+  --bg:#ffffff; --panel:#ffffff; --ink:#0a0a0a; --muted:#5a5a5a;
+  --line:#0a0a0a; --line-strong:#0a0a0a;
+  --accent:#e2001a; --accent-ink:#b30015; --accent-wash:rgba(226,0,26,.12);
+  --deep:#8f1220;   /* rosso scuro del titolo e delle righe di fondo: quello acceso resta alle azioni */
+  --field:#ffffff; --shadow:none; --radius:0;
+  --display:"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --body:"Archivo","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --bg:#15171b;
-    --panel:#1d2025;
-    --ink:#e8e9ec;
-    --muted:#9aa0aa;
-    --line:#2b2f36;
-    --line-strong:#3d434c;
-    --accent:#c95254;
-    --accent-ink:#dd6f71;
-    --accent-wash:rgba(201,82,84,.14);
-    --field:#23272d;
-    --shadow:0 1px 2px rgba(0,0,0,.3);
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#15171b; --panel:#1d2025; --ink:#e8e9ec; --muted:#9aa0aa;
-  --line:#2b2f36; --line-strong:#3d434c; --accent:#c95254; --accent-ink:#dd6f71;
-  --accent-wash:rgba(201,82,84,.14); --field:#23272d;
-  --shadow:0 1px 2px rgba(0,0,0,.3);
-}
+/* numerazione delle sezioni */
+.wrap{counter-reset:sec}
+.wrap .panel{counter-increment:sec}
 
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -86,7 +62,8 @@ h1 .a{color:var(--accent)}
 
 /* ---------- controlli ---------- */
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.row-pager{margin-top:14px}
+/* sopra al documento: cambio pagina a sinistra, rotazione a destra */
+.tools{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px 16px;margin-bottom:10px}
 .filename{
   color:var(--muted);font-size:13px;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;
@@ -120,8 +97,7 @@ h1 .a{color:var(--accent)}
 }
 
 /* ---------- rotazione ---------- */
-.rot-quick{margin-bottom:14px}
-.rot{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.rot{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
 .ticks{font-size:11.5px;color:var(--muted)}
 .deg{min-width:56px;text-align:right;font-variant-numeric:tabular-nums;font-size:13px;color:var(--muted)}
 input[type=range]{
@@ -300,3 +276,156 @@ footer a:hover{color:var(--accent)}
 @media (prefers-reduced-motion:reduce){
   *{transition:none!important}
 }
+
+
+/* =====================================================================
+   Veste grafica: poster svizzero
+   Niente sfondi: la pagina è bianca e l'ordine lo danno la griglia, le
+   righe nere e i numeri. Il rosso compare solo dove si agisce.
+   ===================================================================== */
+
+/* ---------- il motivo: righe parallele che piegano di 90° ---------- */
+/* in fondo alla pagina, a tutta larghezza: arrivano da sinistra ed escono dal formato in basso */
+:root body{padding-bottom:0}
+:root body::after{
+  content:"";display:block;height:168px;margin:64px -16px 0;
+  background:
+    repeating-linear-gradient(to top,transparent 0 16px,var(--deep) 16px 28px) 0 0/calc(100% - 168px) 100% no-repeat,
+    radial-gradient(circle at 0 100%,transparent 0,transparent 15.6px,var(--deep) 16.4px,var(--deep) 27.6px,transparent 28.4px,transparent 43.6px,var(--deep) 44.4px,var(--deep) 55.6px,transparent 56.4px,transparent 71.6px,var(--deep) 72.4px,var(--deep) 83.6px,transparent 84.4px,transparent 99.6px,var(--deep) 100.4px,var(--deep) 111.6px,transparent 112.4px,transparent 127.6px,var(--deep) 128.4px,var(--deep) 139.6px,transparent 140.4px,transparent 155.6px,var(--deep) 156.4px,var(--deep) 167.6px,transparent 168.4px) 100% 0/168px 100% no-repeat;
+}
+
+/* ---------- testata ---------- */
+:root .masthead{padding:28px 0 20px}
+:root h1{
+  max-width:none;font-size:13px;font-weight:600;line-height:1.3;letter-spacing:0;
+}
+:root h1 .a{
+  display:block;font-size:clamp(72px,21vw,132px);font-weight:900;
+  line-height:.8;letter-spacing:-.045em;margin-bottom:10px;color:var(--deep);
+}
+@media (min-width:900px){
+  :root .wrap{
+    max-width:1240px;display:grid;
+    grid-template-columns:176px minmax(0,1fr);column-gap:36px;
+  }
+  :root .wrap>*{grid-column:2;min-width:0}
+  :root .masthead{grid-column:1;grid-row:1/span 5;padding:28px 0 0}
+  /* titolo enorme ruotato di 90°, si legge dal basso verso l'alto */
+  :root h1{
+    position:sticky;top:64px;
+    writing-mode:vertical-rl;transform:rotate(180deg);
+    height:min(640px,calc(100vh - 96px));
+  }
+  :root h1 .a{font-size:min(150px,calc((100vh - 110px) / 4.3));margin:0 0 0 12px}
+  :root .wrap>.panel:first-of-type{margin-top:28px}
+}
+
+/* ---------- sezioni: riga nera, numero grande tagliato, nome ---------- */
+:root .panel{border:0;border-top:6px solid var(--ink);margin-bottom:0;background:none}
+:root .panel-body{padding:0 0 44px}
+:root .grid{gap:36px}
+:root .panel .label{
+  position:relative;display:flex;align-items:flex-end;gap:10px;
+  height:66px;margin:0 0 24px;padding:0 0 4px 126px;overflow:hidden;
+  font-size:11px;font-weight:800;line-height:1;text-transform:uppercase;letter-spacing:.09em;
+}
+/* il numero è più alto della sua finestra: la riga nera gli taglia la testa */
+:root .panel .label::before{
+  content:counter(sec,decimal-leading-zero);
+  position:absolute;left:-5px;bottom:-.17em;
+  font-size:100px;font-weight:900;line-height:1;letter-spacing:-.05em;
+}
+/* il numero rosso è il passo da fare adesso: carica, poi seleziona, poi ritaglia */
+html:root:not(:has(#holder:not([hidden]))) .wrap>.panel:first-of-type .label::before,
+html:root:has(#holder:not([hidden])):not(:has(#preview img)) .grid>.panel:first-child .label::before,
+html:root:has(#preview img) .grid>.panel:last-child .label::before{color:var(--accent)}
+:root .panel .label::before{transition:color .25s}
+:root .hint{margin-top:14px;line-height:1.5}
+
+/* ---------- controlli: nero di base, rosso solo per l'azione ---------- */
+:root .btn{border-radius:0;border-width:2px;font-weight:700}
+:root .btn:hover:not(:disabled){background:var(--ink);color:#fff}
+:root .btn.primary:hover:not(:disabled),
+:root .btn.file:hover{background:var(--ink);border-color:var(--ink)}
+/* a documento caricato "Carica PDF" ha fatto il suo: torna nero */
+html:root:has(#holder:not([hidden])) .btn.file{background:var(--ink);border-color:var(--ink)}
+html:root:has(#holder:not([hidden])) .btn.file:hover{background:var(--accent);border-color:var(--accent)}
+:root .btn.ghost{text-decoration:underline;text-underline-offset:3px;color:var(--ink)}
+:root .btn.ghost:hover:not(:disabled){border-color:var(--ink)}
+:root kbd,
+:root .queue figure,
+:root .queue img{border-radius:0}
+:root .count-badge{border-radius:0;background:var(--ink)}
+:root input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--ink);border-radius:0}
+:root input[type=range]::-moz-range-track{height:2px;background:var(--ink);border-radius:0}
+:root input[type=range]::-webkit-slider-thumb{margin-top:-7px;border:0;box-shadow:none}
+
+/* ---------- area del documento ---------- */
+/* le righe corrono lungo il bordo basso e risalgono a destra, lontane dai righelli */
+:root .stage{
+  border:2px solid var(--deep);border-radius:0;padding:36px 16px 16px 40px;
+  background:
+    repeating-linear-gradient(to bottom,transparent 0 10px,var(--deep) 10px 12px) 0 100%/calc(100% - 108px) 108px no-repeat,
+    radial-gradient(circle at 0 0,transparent 0,transparent 9.6px,var(--deep) 10.4px,var(--deep) 11.6px,transparent 12.4px,transparent 21.6px,var(--deep) 22.4px,var(--deep) 23.6px,transparent 24.4px,transparent 33.6px,var(--deep) 34.4px,var(--deep) 35.6px,transparent 36.4px,transparent 45.6px,var(--deep) 46.4px,var(--deep) 47.6px,transparent 48.4px,transparent 57.6px,var(--deep) 58.4px,var(--deep) 59.6px,transparent 60.4px,transparent 69.6px,var(--deep) 70.4px,var(--deep) 71.6px,transparent 72.4px,transparent 81.6px,var(--deep) 82.4px,var(--deep) 83.6px,transparent 84.4px,transparent 93.6px,var(--deep) 94.4px,var(--deep) 95.6px,transparent 96.4px,transparent 105.6px,var(--deep) 106.4px,var(--deep) 107.6px,transparent 108.4px) 100% 100%/108px 108px no-repeat,
+    repeating-linear-gradient(to right,transparent 0 10px,var(--deep) 10px 12px) 100% 0/108px calc(100% - 108px) no-repeat,
+    var(--bg);
+}
+/* con un documento aperto il fondo resta pulito: contano la pagina e i righelli */
+:root .stage:has(.canvas-holder:not([hidden])){background:var(--bg);border-color:var(--ink)}
+:root .stage.drop{border-color:var(--accent);background:var(--accent-wash)}
+:root .empty{max-width:46ch;color:var(--ink);background:var(--bg);padding:22px 28px}
+:root .empty strong{font-size:22px;font-weight:900;letter-spacing:-.02em}
+
+/* righello in millimetri, in scala con la pagina (le tacche: 5 e 10 mm) */
+:root .ruler{
+  display:block;position:absolute;pointer-events:none;
+  font:600 9px/1 var(--body);color:var(--ink);font-variant-numeric:tabular-nums;
+}
+:root .ruler span{position:absolute}
+:root .ruler-x{
+  left:0;right:0;bottom:100%;height:20px;border-bottom:1px solid var(--ink);
+  background:
+    repeating-linear-gradient(to right,var(--ink) 0 1px,transparent 1px calc(var(--mm) * 10)) 0 100%/100% 9px no-repeat,
+    repeating-linear-gradient(to right,var(--ink) 0 1px,transparent 1px calc(var(--mm) * 5)) 0 100%/100% 5px no-repeat;
+}
+:root .ruler-x span{top:0;padding-left:3px}
+:root .ruler-y{
+  top:0;bottom:0;right:100%;width:24px;border-right:1px solid var(--ink);
+  background:
+    repeating-linear-gradient(to bottom,var(--ink) 0 1px,transparent 1px calc(var(--mm) * 10)) 100% 0/9px 100% no-repeat,
+    repeating-linear-gradient(to bottom,var(--ink) 0 1px,transparent 1px calc(var(--mm) * 5)) 100% 0/5px 100% no-repeat;
+}
+:root .ruler-y span{right:11px;padding-top:3px}
+
+/* selezione: crocini di taglio al posto dei pallini (la presa resta sull'angolo) */
+:root #selRect{border-color:var(--accent)}
+/* il velo scuro si ferma al bordo della pagina, senza coprire i righelli */
+:root #overlay{overflow:hidden}
+:root .handle{
+  width:20px;height:20px;border:0;border-radius:0;
+  background:linear-gradient(var(--accent),var(--accent)),linear-gradient(var(--accent),var(--accent));
+  background-repeat:no-repeat;background-size:13px 2px,2px 13px;
+  filter:drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff);
+}
+:root .handle.nw{left:-19px;top:-19px;right:auto;bottom:auto;background-position:0 100%,100% 0}
+:root .handle.ne{right:-19px;top:-19px;left:auto;bottom:auto;background-position:100% 100%,0 0}
+:root .handle.sw{left:-19px;bottom:-19px;right:auto;top:auto;background-position:0 0,100% 100%}
+:root .handle.se{right:-19px;bottom:-19px;left:auto;top:auto;background-position:100% 0,0 100%}
+
+/* ---------- ritaglio: anteprima dentro i crocini ---------- */
+:root .preview{
+  --m:var(--ink);
+  border:0;border-radius:0;padding:22px;min-height:164px;
+  background:
+    linear-gradient(var(--m),var(--m)) 0 16px/11px 1px no-repeat,
+    linear-gradient(var(--m),var(--m)) 16px 0/1px 11px no-repeat,
+    linear-gradient(var(--m),var(--m)) 100% 16px/11px 1px no-repeat,
+    linear-gradient(var(--m),var(--m)) calc(100% - 16px) 0/1px 11px no-repeat,
+    linear-gradient(var(--m),var(--m)) 0 calc(100% - 16px)/11px 1px no-repeat,
+    linear-gradient(var(--m),var(--m)) 16px 100%/1px 11px no-repeat,
+    linear-gradient(var(--m),var(--m)) 100% calc(100% - 16px)/11px 1px no-repeat,
+    linear-gradient(var(--m),var(--m)) calc(100% - 16px) 100%/1px 11px no-repeat;
+}
+:root .preview img{border-radius:0;outline:1px solid var(--line)}
+:root .paper{border-radius:0;box-shadow:none;border-color:var(--ink)}
+:root footer{border-top-width:2px;margin-top:0}

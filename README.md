@@ -44,6 +44,7 @@ index.html                 markup e testi
 assets/css/stompat.css     palette, tipografia, layout
 assets/js/core.js          namespace, event bus, utilità
 assets/js/view.js          PDF.js, render della pagina, rotazione fine
+assets/js/ruler.js         righelli in millimetri attorno alla pagina
 assets/js/selection.js     riquadro di selezione (mouse + touch)
 assets/js/output.js        ritaglio, stampa con fallback, download
 assets/js/app.js           collegamento DOM e stato dell'interfaccia
@@ -95,15 +96,19 @@ node test/output.test.js
 
 ## Stile
 
-Interfaccia neutra: grigi tenui, angoli morbidi, un solo colore d'accento (`#9E2A2B`)
-per il pulsante principale e il riquadro di selezione.
-[Russo One](https://fonts.google.com/specimen/Russo+One) è usato solo per il titolo.
-Tema chiaro e scuro automatici.
+Poster svizzero: pagina bianca, righe nere, numeri di sezione grandi, titolo in
+verticale e un motivo di righe parallele che piegano di 90°.
+Il rosso acceso (`#e2001a`) compare solo dove si agisce: il pulsante da premere,
+il numero del passo in corso, la selezione. Titolo e righe di fondo usano un rosso
+più scuro (`#8f1220`).
+Attorno alla pagina ci sono righelli in millimetri in scala reale, e la selezione
+ha i crocini di taglio agli angoli.
+Il carattere è [Archivo](https://fonts.google.com/specimen/Archivo). Solo tema chiaro.
 
 ## Dipendenze
 
 - [PDF.js](https://mozilla.github.io/pdf.js/) 3.11.174 da cdnjs
-- [Russo One](https://fonts.google.com/specimen/Russo+One) da Google Fonts
+- [Archivo](https://fonts.google.com/specimen/Archivo) da Google Fonts
 
 ## Licenza
 

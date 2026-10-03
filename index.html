@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Stompat - Studio PDF a beneficio della gloriosa causa ritaglio Stampante.</title>
 <meta name="description" content="Stompat: carichi un PDF, selezioni con il mouse o con il dito la porzione esatta di una pagina, la raddrizzi e la stampi. Tutto nel browser, nessun upload.">
-<meta name="color-scheme" content="light dark">
+<meta name="color-scheme" content="light">
 
 <meta property="og:title" content="Stompat - Studio PDF a beneficio della gloriosa causa ritaglio Stampante.">
 <meta property="og:description" content="Ritaglia e stampa una porzione esatta di una pagina PDF, direttamente nel browser.">
@@ -14,13 +14,8 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/stompat.css">
-
-<!-- prova grafica: stili alternativi, si cambiano con i tasti 0-7 -->
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800;900&family=Archivo+Black&family=IBM+Plex+Mono:wght@400;600&family=Jost:wght@300;400;500;600&family=Michroma&family=Oswald:wght@400;600&family=Space+Grotesk:wght@400;500;700&family=VT323&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/themes.css">
-<script src="assets/js/styles.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -37,32 +32,7 @@
         <label class="btn file" for="fileInput">Carica PDF</label>
         <span class="filename" id="fileName">Nessun file selezionato.</span>
       </div>
-      <div class="row row-pager">
-        <div class="pager">
-          <button class="btn small" id="prevBtn" disabled aria-label="Pagina precedente">‹ Prec.</button>
-          <span class="count" id="pageCount" aria-live="polite">— / —</span>
-          <button class="btn small" id="nextBtn" disabled aria-label="Pagina successiva">Succ. ›</button>
-        </div>
-      </div>
       <p class="status" id="status" role="status">Carica un PDF per iniziare.</p>
-    </div>
-  </section>
-
-  <section class="panel">
-    <div class="panel-body">
-      <h2 class="label">Ruota la pagina</h2>
-      <div class="row rot-quick">
-        <button class="btn small" id="rotLeft" disabled>↺ 90° a sinistra</button>
-        <button class="btn small" id="rotRight" disabled>↻ 90° a destra</button>
-        <button class="btn small ghost" id="rotReset" disabled>Azzera</button>
-      </div>
-      <div class="rot">
-        <span class="ticks" aria-hidden="true">−10°</span>
-        <input type="range" id="rotRange" min="-10" max="10" step="0.1" value="0" disabled
-               aria-label="Inclinazione fine della pagina, in gradi">
-        <span class="ticks" aria-hidden="true">+10°</span>
-        <output class="deg" id="degOut" for="rotRange">0.0°</output>
-      </div>
     </div>
   </section>
 
@@ -71,6 +41,25 @@
     <section class="panel">
       <div class="panel-body">
         <h2 class="label">Seleziona l'area</h2>
+        <div class="tools">
+          <div class="pager">
+            <button class="btn small" id="prevBtn" disabled aria-label="Pagina precedente">‹ Prec.</button>
+            <span class="count" id="pageCount" aria-live="polite">— / —</span>
+            <button class="btn small" id="nextBtn" disabled aria-label="Pagina successiva">Succ. ›</button>
+          </div>
+          <div class="row rot-quick">
+            <button class="btn small" id="rotLeft" disabled>↺ 90° a sinistra</button>
+            <button class="btn small" id="rotRight" disabled>↻ 90° a destra</button>
+            <button class="btn small ghost" id="rotReset" disabled>Azzera</button>
+          </div>
+        </div>
+        <div class="rot">
+          <span class="ticks" aria-hidden="true">−10°</span>
+          <input type="range" id="rotRange" min="-10" max="10" step="0.1" value="0" disabled
+                 aria-label="Inclinazione fine della pagina, in gradi">
+          <span class="ticks" aria-hidden="true">+10°</span>
+          <output class="deg" id="degOut" for="rotRange">0.0°</output>
+        </div>
         <div class="stage" id="stage">
           <div class="empty" id="empty">
             <strong>Nessun PDF caricato</strong>
@@ -166,6 +155,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="assets/js/core.js"></script>
 <script src="assets/js/view.js"></script>
+<script src="assets/js/ruler.js"></script>
 <script src="assets/js/selection.js"></script>
 <script src="assets/js/output.js"></script>
 <script src="assets/js/app.js"></script>
