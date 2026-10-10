@@ -319,7 +319,7 @@ footer a:hover{color:var(--accent)}
     writing-mode:vertical-rl;transform:rotate(180deg);
     height:min(640px,calc(100vh - 96px));
   }
-  :root h1 .a{font-size:min(150px,calc((100vh - 110px) / 4.3));margin:0 0 0 12px}
+  :root h1 .a{font-size:min(94px,calc((100vh - 110px) / 6.8));margin:0 0 0 12px;white-space:nowrap}
   :root .wrap>.panel:first-of-type{margin-top:28px}
 }
 
