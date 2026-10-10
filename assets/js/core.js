@@ -1,17 +1,17 @@
-/* Stompat — core
+/* Sito galattico — core
  * Namespace condiviso, mini event bus e utilità.
  * Script classici, niente moduli ES: così il file si apre anche con doppio click (file://).
  */
 (function (global) {
   'use strict';
 
-  var Stompat = global.Stompat || (global.Stompat = {});
+  var SitoGalattico = global.SitoGalattico || (global.SitoGalattico = {});
 
-  Stompat.VERSION = '1.1.0';
+  SitoGalattico.VERSION = '1.1.0';
 
   /* Foglio di riferimento per l'anteprima e per la stampa in scala reale.
      I margini corrispondono a @page{margin:10mm} del documento di stampa. */
-  Stompat.PAPER = {
+  SitoGalattico.PAPER = {
     name: 'A4',
     width: 210,
     height: 297,
@@ -30,7 +30,7 @@
   };
 
   /* ---- mini event bus ---- */
-  Stompat.emitter = function emitter() {
+  SitoGalattico.emitter = function emitter() {
     var handlers = {};
     return {
       on: function (name, fn) {
@@ -39,14 +39,14 @@
       },
       emit: function (name, payload) {
         (handlers[name] || []).forEach(function (fn) {
-          try { fn(payload); } catch (err) { console.error('[stompat] handler ' + name, err); }
+          try { fn(payload); } catch (err) { console.error('[sito-galattico] handler ' + name, err); }
         });
       }
     };
   };
 
   /* ---- utilità ---- */
-  Stompat.util = {
+  SitoGalattico.util = {
     $: function (id) { return document.getElementById(id); },
 
     clamp: function (v, min, max) { return v < min ? min : (v > max ? max : v); },

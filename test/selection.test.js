@@ -13,7 +13,7 @@ win.window = win;
 global.window = win; global.document = win.document;
 new Function('window','document','global', fs.readFileSync(path+'core.js','utf8')+fs.readFileSync(path+'selection.js','utf8'))(win, win.document, win);
 
-const S = win.Stompat.selection;
+const S = win.SitoGalattico.selection;
 const overlay = makeEl(), rectEl = makeEl();
 const canvas = { width:800, height:1132, getBoundingClientRect:()=>({left:0,top:0,width:400,height:566}) };
 S.mount({overlay, rectEl, canvas});

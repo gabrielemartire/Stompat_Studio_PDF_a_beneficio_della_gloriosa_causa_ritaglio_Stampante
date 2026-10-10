@@ -9,7 +9,7 @@ new Function('window', 'document', 'global',
   fs.readFileSync(path + 'core.js', 'utf8') + fs.readFileSync(path + 'output.js', 'utf8')
 )(win, win.document, win);
 
-const out = win.Stompat.output;
+const out = win.SitoGalattico.output;
 const eq = (label, got, want) => {
   const ok = JSON.stringify(got) === JSON.stringify(want);
   console.log((ok ? 'PASS  ' : 'FAIL  ') + label,
@@ -42,6 +42,6 @@ eq('adatta al foglio limita la larghezza', fit.includes('img{max-width:100%;heig
 eq('margine di pagina da PAPER', real.includes('@page{margin:10mm}'), true);
 
 // --- area stampabile ---
-const P = win.Stompat.PAPER;
+const P = win.SitoGalattico.PAPER;
 eq('A4 verticale stampabile', P.printable(false), { w: 190, h: 277 });
 eq('A4 orizzontale stampabile', P.printable(true), { w: 277, h: 190 });

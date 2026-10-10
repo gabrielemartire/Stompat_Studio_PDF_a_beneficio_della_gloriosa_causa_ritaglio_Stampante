@@ -1,4 +1,4 @@
-/* Stompat — view
+/* Sito galattico — view
  * Carica il PDF con PDF.js, renderizza la pagina corrente su un canvas sorgente
  * (mai ruotato) e la ricompone su un canvas visibile applicando la rotazione fine.
  * Tutto ciò che viene selezionato e stampato legge SEMPRE dal canvas visibile.
@@ -6,13 +6,13 @@
 (function (global) {
   'use strict';
 
-  var Stompat = global.Stompat;
+  var SitoGalattico = global.SitoGalattico;
 
   var RENDER_SCALE = 2.2;   // px per punto PDF: nitidezza da stampa
   var MAX_PIXELS = 24e6;    // tetto per non far esplodere la memoria su pagine enormi
 
-  Stompat.view = (function () {
-    var bus = Stompat.emitter();
+  SitoGalattico.view = (function () {
+    var bus = SitoGalattico.emitter();
 
     var source = document.createElement('canvas'); // pagina renderizzata, senza rotazione
     var target = null;                             // canvas a schermo, ruotato
@@ -42,7 +42,7 @@
         return;
       }
 
-      docName = Stompat.util.safeName(file.name);
+      docName = SitoGalattico.util.safeName(file.name);
       bus.emit('loading', { name: file.name });
 
       var reader = new FileReader();
@@ -61,7 +61,7 @@
             render();
           })
           .catch(function (err) {
-            console.error('[stompat]', err);
+            console.error('[sito-galattico]', err);
             bus.emit('error', {
               message: 'Impossibile aprire il PDF: ' +
                 ((err && err.message) || 'formato non leggibile')
@@ -111,7 +111,7 @@
         });
       }).catch(function (err) {
         if (err && err.name === 'RenderingCancelledException') return;
-        console.error('[stompat]', err);
+        console.error('[sito-galattico]', err);
         bus.emit('error', { message: 'Render della pagina fallito.' });
       });
     }
@@ -147,7 +147,7 @@
 
     function goTo(n) {
       if (!doc) return false;
-      n = Stompat.util.clamp(Math.round(n), 1, doc.numPages);
+      n = SitoGalattico.util.clamp(Math.round(n), 1, doc.numPages);
       if (n === pageNumber) return false;
       pageNumber = n;
       render();
@@ -164,7 +164,7 @@
 
     /* inclinazione fine (lo slider) */
     function setFine(deg) {
-      var next = Stompat.util.clamp(parseFloat(deg) || 0, -10, 10);
+      var next = SitoGalattico.util.clamp(parseFloat(deg) || 0, -10, 10);
       if (next === fine) return false;
       fine = next;
       compose();

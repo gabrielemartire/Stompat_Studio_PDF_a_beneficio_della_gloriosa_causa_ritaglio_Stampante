@@ -1,4 +1,4 @@
-/* Stompat — output
+/* Sito galattico — output
  * Ritaglio del canvas visibile, stampa e salvataggio su disco.
  * La stampa ha tre strade, in ordine di preferenza:
  *   1. finestra separata (evita i blocchi di window.print() dentro un iframe)
@@ -8,9 +8,9 @@
 (function (global) {
   'use strict';
 
-  var Stompat = global.Stompat;
+  var SitoGalattico = global.SitoGalattico;
 
-  Stompat.output = (function () {
+  SitoGalattico.output = (function () {
 
     /* ---------- ritaglio ---------- */
 
@@ -45,8 +45,8 @@
       }).join('');
 
       return '<!DOCTYPE html><html lang="it"><head><meta charset="utf-8">' +
-        '<title>' + Stompat.util.escapeHtml(title) + '</title><style>' +
-        '@page{margin:' + Stompat.PAPER.margin + 'mm}' +
+        '<title>' + SitoGalattico.util.escapeHtml(title) + '</title><style>' +
+        '@page{margin:' + SitoGalattico.PAPER.margin + 'mm}' +
         'html,body{margin:0;padding:0;background:#fff}' +
         '.sheet{page-break-after:always;break-after:page}' +
         '.sheet:last-child{page-break-after:auto;break-after:auto}' +
@@ -62,7 +62,7 @@
       opts = opts || {};
       var list = canvases.length ? canvases : [canvases];
       var dataUrls = list.map(function (c) { return c.toDataURL('image/png'); });
-      var html = printDocument(dataUrls, opts.title || 'Stompat — ritagli', {
+      var html = printDocument(dataUrls, opts.title || 'Sito galattico — ritagli', {
         mode: opts.mode,
         sizes: opts.sizes
       });
@@ -78,7 +78,7 @@
         win.document.close();
 
         var fire = function () {
-          try { win.focus(); win.print(); } catch (err) { console.warn('[stompat]', err); }
+          try { win.focus(); win.print(); } catch (err) { console.warn('[sito-galattico]', err); }
         };
         var pending = 0;
         var images = win.document.images;
@@ -124,7 +124,7 @@
           global.setTimeout(function () { if (frame.parentNode) frame.remove(); }, 60000);
           finish(true, true);
         } catch (err) {
-          console.warn('[stompat]', err);
+          console.warn('[sito-galattico]', err);
           finish(false);
         }
       };

@@ -1,4 +1,4 @@
-/* Stompat — ruler
+/* Sito galattico — ruler
  * Righelli in millimetri lungo il bordo alto e sinistro della pagina, in scala
  * reale: qui si calcola quanti px a schermo vale un millimetro di carta e si
  * scrivono i numeri; le tacche le disegna il CSS a partire da --mm.
@@ -7,14 +7,14 @@
 (function (global) {
   'use strict';
 
-  var Stompat = global.Stompat;
-  var view = Stompat.view;
+  var SitoGalattico = global.SitoGalattico;
+  var view = SitoGalattico.view;
 
   var MIN_LABEL_GAP_PX = 34;          // sotto questa distanza i numeri si toccano
   var STEPS = [10, 20, 50, 100];      // passi possibili fra un numero e l'altro, in mm
 
-  var holder = Stompat.util.$('holder');
-  var canvas = Stompat.util.$('viewCanvas');
+  var holder = SitoGalattico.util.$('holder');
+  var canvas = SitoGalattico.util.$('viewCanvas');
   if (!holder || !canvas) return;
 
   var rulerX = make('ruler ruler-x');
@@ -68,12 +68,12 @@
   /* ---------- mirino ---------- */
   crossV.appendChild(document.createElement('b'));
   crossH.appendChild(document.createElement('b'));
-  var overlay = Stompat.util.$('overlay');
+  var overlay = SitoGalattico.util.$('overlay');
   if (overlay) {
     overlay.addEventListener('pointermove', function (e) {
       var rect = canvas.getBoundingClientRect();
-      var x = Stompat.util.clamp(e.clientX - rect.left, 0, rect.width);
-      var y = Stompat.util.clamp(e.clientY - rect.top, 0, rect.height);
+      var x = SitoGalattico.util.clamp(e.clientX - rect.left, 0, rect.width);
+      var y = SitoGalattico.util.clamp(e.clientY - rect.top, 0, rect.height);
       crossV.style.left = x + 'px';
       crossH.style.top = y + 'px';
       if (scale) {

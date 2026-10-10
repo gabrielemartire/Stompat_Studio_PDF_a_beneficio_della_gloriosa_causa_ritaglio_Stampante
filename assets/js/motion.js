@@ -1,4 +1,4 @@
-/* Stompat — motion
+/* Sito galattico — motion
  * Fa entrare le cose man mano che arrivano a schermo: ogni blocco riceve la
  * classe "in" quando entra nella finestra, e il CSS fa il resto (riga che si
  * disegna, numero che sale, contenuto che arriva dal basso).

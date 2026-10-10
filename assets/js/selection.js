@@ -1,4 +1,4 @@
-/* Stompat — selection
+/* Sito galattico — selection
  * Riquadro di selezione sopra il canvas visibile, via Pointer Events (mouse + dito).
  * Le coordinate sono normalizzate 0..1 sul canvas ruotato: restano valide anche se
  * la pagina viene ridimensionata, e si convertono in pixel solo al momento del ritaglio.
@@ -6,14 +6,14 @@
 (function (global) {
   'use strict';
 
-  var Stompat = global.Stompat;
-  var clamp = Stompat.util.clamp;
+  var SitoGalattico = global.SitoGalattico;
+  var clamp = SitoGalattico.util.clamp;
 
   var HANDLE_HIT_PX = 16;  // tolleranza per afferrare un angolo
   var MIN_SIDE_PX = 8;     // sotto questa soglia la selezione viene scartata
 
-  Stompat.selection = (function () {
-    var bus = Stompat.emitter();
+  SitoGalattico.selection = (function () {
+    var bus = SitoGalattico.emitter();
 
     var overlay = null, rectEl = null, canvas = null;
     var sel = null;          // {x,y,w,h} normalizzati

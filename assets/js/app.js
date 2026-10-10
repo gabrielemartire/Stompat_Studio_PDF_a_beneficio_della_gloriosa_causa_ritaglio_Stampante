@@ -1,14 +1,14 @@
-/* Stompat — app
+/* Sito galattico — app
  * Collega DOM, view, selection e output, e tiene aggiornato lo stato a schermo.
  */
 (function (global) {
   'use strict';
 
-  var Stompat = global.Stompat;
-  var $ = Stompat.util.$;
-  var view = Stompat.view;
-  var selection = Stompat.selection;
-  var output = Stompat.output;
+  var SitoGalattico = global.SitoGalattico;
+  var $ = SitoGalattico.util.$;
+  var view = SitoGalattico.view;
+  var selection = SitoGalattico.selection;
+  var output = SitoGalattico.output;
 
   var el = {};
   var lastCrop = null;
@@ -100,8 +100,8 @@
     var ppp = view.getPxPerPoint();
     if (!ppp) return null;
     return {
-      w: Math.round(Stompat.util.pxToMm(px.w, ppp)),
-      h: Math.round(Stompat.util.pxToMm(px.h, ppp))
+      w: Math.round(SitoGalattico.util.pxToMm(px.w, ppp)),
+      h: Math.round(SitoGalattico.util.pxToMm(px.h, ppp))
     };
   }
 
@@ -137,7 +137,7 @@
 
   /* Anteprima: dove finisce il ritaglio su un foglio A4, alla scala scelta. */
   function updatePaper() {
-    var paper = Stompat.PAPER;
+    var paper = SitoGalattico.PAPER;
     var s = selection.get();
     var mm = s && s.px ? millimetres(s.px) : null;
 
@@ -536,7 +536,7 @@
     });
     el.modalDownload.addEventListener('click', function () {
       blockedUrls.forEach(function (url, i) {
-        var name = pendingNames[i] || ('stompat-ritaglio-' + (i + 1) + '.png');
+        var name = pendingNames[i] || ('sito-galattico-ritaglio-' + (i + 1) + '.png');
         global.setTimeout(function () { output.downloadUrl(url, name); }, i * 350);
       });
     });
